@@ -1,0 +1,17 @@
+{
+	"name": "slendium/http",
+	"description": "A Slendium recommendation on handling HTTP messages.",
+	"type": "library",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"Slendium\\Http\\": "src/"
+		}
+	},
+	"authors": [
+		{
+			"name": "C. Fahner",
+			"email": "cfahner.git.ixuk9phi@slendium.org"
+		}
+	]
+}
