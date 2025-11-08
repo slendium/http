@@ -3,9 +3,19 @@
 	"description": "A Slendium recommendation on handling HTTP messages.",
 	"type": "library",
 	"license": "MIT",
+	"require": {},
+	"require-dev": {
+		"phpstan/phpstan": "^2.1",
+		"phpunit/phpunit": "^12.4"
+	},
 	"autoload": {
 		"psr-4": {
 			"Slendium\\Http\\": "src/"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Slendium\\HttpTests\\": "tests/"
 		}
 	},
 	"authors": [
