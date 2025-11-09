@@ -2,6 +2,8 @@
 
 namespace Slendium\Http\Base;
 
+use Override;
+
 use Slendium\Http\Field as IField;
 
 /**
@@ -15,7 +17,10 @@ class Field implements IField {
 	/** @since 1.0 */
 	public function __construct(
 
-		/** @override */
+		/**
+		 * @override
+		 * @var lowercase-string&non-empty-string
+		 */
 		public readonly string $name,
 
 		/** @override */
