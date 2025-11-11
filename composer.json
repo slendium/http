@@ -3,7 +3,9 @@
 	"description": "A Slendium recommendation on handling HTTP messages.",
 	"type": "library",
 	"license": "MIT",
-	"require": {},
+	"require": {
+		"php": "^8.4"
+	},
 	"require-dev": {
 		"phpstan/phpstan": "^2.1",
 		"phpunit/phpunit": "^12.4"
