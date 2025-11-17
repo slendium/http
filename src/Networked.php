@@ -2,8 +2,10 @@
 
 namespace Slendium\Http;
 
+use Slendium\Http\Network\SocketAddress;
+
 /**
- * Wrapper for values that have IP network information associated with them.
+ * Wrapper for values that have network information associated with them.
  * @since 1.0
  * @template T
  * @author C. Fahner
@@ -11,17 +13,8 @@ namespace Slendium\Http;
  */
 interface Networked {
 
-	/**
-	 * The IP address from/to which the information was received/sent.
-	 * @since 1.0
-	 */
-	public IpAddress $ip { get; }
-
-	/**
-	 * @since 1.0
-	 * @var int<0,65535>
-	 */
-	public int $port { get; }
+	/** @since 1.0 */
+	public SocketAddress $address { get; }
 
 	/**
 	 * @since 1.0

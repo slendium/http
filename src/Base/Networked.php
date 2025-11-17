@@ -3,6 +3,7 @@
 namespace Slendium\Http\Base;
 
 use Slendium\Http\Networked as INetworked;
+use Slendium\Http\Network\SocketAddress;
 
 /**
  * @since 1.0
@@ -17,13 +18,7 @@ class Networked implements INetworked {
 	public function __construct(
 
 		/** @override */
-		public readonly IpAddress $ip,
-
-		/**
-		 * @override
-		 * @var int<0,65535>
-		 */
-		public readonly int $port,
+		public readonly SocketAddress $address,
 
 		/**
 		 * @override
