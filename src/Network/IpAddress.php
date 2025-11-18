@@ -42,6 +42,7 @@ abstract class IpAddress implements Stringable {
 			: Ipv6Address::fromString($input);
 	}
 
+	/** @internal */
 	protected abstract function onConstruct(mixed ...$args): void;
 
 	private final function __construct(mixed ...$args) {
