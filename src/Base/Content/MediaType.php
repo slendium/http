@@ -27,14 +27,6 @@ class MediaType implements IMediaType {
 		return MediaTypeParser::parseString($input);
 	}
 
-	/** @since 1.0 */
-	public static function tryFromString(string $input): ?self {
-		try {
-			return self::fromString($input);
-		} catch (ParseException $_) { }
-		return null;
-	}
-
 	/**
 	 * @since 1.0
 	 * @param lowercase-string&non-empty-string $main
