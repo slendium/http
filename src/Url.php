@@ -8,7 +8,7 @@ use ArrayAccess,
 	Traversable;
 
 /**
- * A URL pointing to an HTTP resource.
+ * A URL pointing to an online resource.
  *
  * Property names were chosen to match the PHP-native `parse_url()` function for consistency.
  *
