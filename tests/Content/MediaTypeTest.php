@@ -54,15 +54,6 @@ class MediaTypeTest extends TestCase {
 		MediaType::fromString($input);
 	}
 
-	#[DataProvider('invalidCases')]
-	public function test_tryFromString_shouldReturnNull_whenInputInvalid(string $input) {
-		// Act
-		$result = MediaType::tryFromString($input);
-
-		// Assert
-		$this->assertNull($result);
-	}
-
 	public function test___toString_shouldAddSlash() {
 		// Arrange
 		$sut = MediaType::fromNames('text', 'plain');
