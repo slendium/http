@@ -93,6 +93,13 @@ final class StringConsumer {
 		return false;
 	}
 
+	/** Throws a `ParseException` if the result of `peek(1)` is not in the given list. */
+	public function expect(array $chars, string $message): void {
+		if (!$this->peekEquals(...$chars)) {
+			throw new ParseException($message);
+		}
+	}
+
 	/** @param int<1,max> $amount */
 	public function rewind(int $amount): void {
 		$targetIndex = $this->index - $amount;

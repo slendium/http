@@ -201,6 +201,17 @@ final class StringConsumerTest extends TestCase {
 		$this->assertFalse($result);
 	}
 
+	public function test_expect_throws_whenNoCharMatches() {
+		// Arrange
+		$sut = new StringConsumer('test');
+
+		// Assert
+		$this->expectException(ParseException::class);
+
+		// Act
+		$sut->expect([ 'x', 'y', 'z' ], 'error message');
+	}
+
 	public function test_rewind_shouldNotThrow_whenNotAtTheStart() {
 		// Arrange
 		$sut = new StringConsumer('test');
