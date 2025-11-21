@@ -82,6 +82,17 @@ final class StringConsumer {
 			: '';
 	}
 
+	/** Checks if the result of `peek(1)` matches any of the given characters. */
+	public function peekEquals(string ...$chars): bool {
+		$compare = $this->string[$this->index];
+		foreach ($chars as $char) {
+			if ($compare === $char) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	/** @param int<1,max> $amount */
 	public function rewind(int $amount): void {
 		$targetIndex = $this->index - $amount;

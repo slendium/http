@@ -121,6 +121,17 @@ final class StringConsumerTest extends TestCase {
 		$sut->discard(1);
 	}
 
+	public function test_discardSpaces_shouldDiscardSpacesAtStart() {
+		// Arrange
+		$sut = new StringConsumer('   test');
+
+		// Act
+		$sut->discardSpaces();
+
+		// Assert
+		$this->assertSame('t', $sut->peek(1));
+	}
+
 	public function test_peek_shouldReturnString_whenCharsRemaining() {
 		// Arrange
 		$sut = new StringConsumer('test');
@@ -166,6 +177,28 @@ final class StringConsumerTest extends TestCase {
 			// Assert
 			$this->assertSame($sut->consume(1), $result);
 		}
+	}
+
+	public function test_peekEquals_shouldReturnTrue_whenAnyCharMatches() {
+		// Arrange
+		$sut = new StringConsumer('test');
+
+		// Act
+		$result = $sut->peekEquals('x', 'y', 'z', 't');
+
+		// Assert
+		$this->assertTrue($result);
+	}
+
+	public function test_peekEquals_shouldReturnFalse_whenNoCharMatches() {
+		// Arrange
+		$sut = new StringConsumer('test');
+
+		// Act
+		$result = $sut->peekEquals('x', 'u', 'p');
+
+		// Assert
+		$this->assertFalse($result);
 	}
 
 	public function test_rewind_shouldNotThrow_whenNotAtTheStart() {
