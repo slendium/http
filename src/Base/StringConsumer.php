@@ -65,6 +65,13 @@ final class StringConsumer {
 		$this->index = $end;
 	}
 
+	/** Discards as long as the next character is a space (OWS: aka optional whitespace, zero or more spaces). */
+	public function discardSpaces(): void {
+		while ($this->peek(1) === ' ') {
+			$this->discard(1);
+		}
+	}
+
 	/** @param int<1,max> $count */
 	#[NoDiscard]
 	public function peek(int $count): string {
