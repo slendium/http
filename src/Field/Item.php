@@ -69,6 +69,80 @@ abstract class Item {
 		$this->onConstruct(...$args);
 	}
 
+	/**
+	 * Attempts to return the item as an integer (casts floats and numeric strings).
+	 * @since 1.0
+	 */
+	public function asInt(): ?int {
+		if (\is_int($this->value) || \is_float($this->value)) {
+			return (int)$this->value;
+		} else if ($this instanceof Item\String_ && \is_numeric($this->value)) {
+			return (int)$this->value;
+		}
+		return null;
+	}
+
+	/**
+	 * Attempts to return the item as a float (casts ints and numeric strings).
+	 * @since 1.0
+	 */
+	public function asFloat(): ?float {
+		if (\is_int($this->value) || \is_float($this->value)) {
+			return (float)$this->value;
+		} else if ($this instanceof Item\String_ && \is_numeric($this->value)) {
+			return (float)$this->value;
+		}
+		return null;
+	}
+
+	/**
+	 * Attempts to return the item as a string value (number, string, token or display strings).
+	 * @since 1.0
+	 */
+	public function asString(): ?string {
+		if ($this instanceof Item\String_ || $this instanceof Item\Token || $this instanceof Item\DisplayString) {
+			return $this->value;
+		} else if (\is_int($this->value) || is_float($this->value)) {
+			return (string)$this->value;
+		}
+		return null;
+	}
+
+	/**
+	 * Attempts to return the item as a binary string.
+	 * @since 1.0
+	 */
+	public function asBinaryString(): ?string {
+		return $this instanceof Item\ByteSequence
+			? $this->value
+			: null;
+	}
+
+	/**
+	 * Attempts to return the item as a boolean value.
+	 * @since 1.0
+	 */
+	public function asBool(): ?bool {
+		if (\is_bool($this->value)) {
+			return $this->value;
+		} else if (\is_int($this->value)) {
+			return $this->value !== 0;
+		} else if (\is_float($this->value)) {
+			return $this->value !== 0.0;
+		}
+		return null;
+	}
+
+	/**
+	 * Attempts to return the item as a date.
+	 * @since 1.0
+	 */
+	public function asDate(): ?DateTimeInterface {
+		return $this->value instanceof DateTimeInterface
+			? $this->value
+			: null;
+	}
+
 	/** @internal */
 	protected abstract function onConstruct(mixed ...$args): void;
 
