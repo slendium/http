@@ -2,8 +2,8 @@
 
 namespace Slendium\Http\Base;
 
-use LogicException,
-	NoDiscard;
+use LogicException;
+use NoDiscard;
 
 /**
  * Consumes an ASCII string one (or more) character(s) at a time.
@@ -93,7 +93,10 @@ final class StringConsumer {
 		return false;
 	}
 
-	/** Throws a `ParseException` if the result of `peek(1)` is not in the given list. */
+	/**
+	 * Throws a `ParseException` if the result of `peek(1)` is not in the given list.
+	 * @param non-empty-string[] $chars
+	 */
 	public function expect(array $chars, string $message): void {
 		if (!$this->peekEquals(...$chars)) {
 			throw new ParseException($message);
