@@ -22,12 +22,12 @@ class Parameterized implements IParameterized {
 	/**
 	 * Creates a new parameterized but return-hints the interface to help static analyzers.
 	 * @template TValue
-	 * @param TValue $value
+	 * @param TValue $data
 	 * @param ArrayAccess<(non-empty-string&lowercase-string)|int<0,max>,?Item>&Countable&Traversable<non-empty-string&lowercase-string,Item> $parameters
 	 * @return IParameterized<TValue>
 	 */
-	public static function newInterface(mixed $value, ArrayAccess&Countable&Traversable $parameters): IParameterized {
-		return new self($value, $parameters);
+	public static function newInterface(mixed $data, ArrayAccess&Countable&Traversable $parameters): IParameterized {
+		return new self($data, $parameters);
 	}
 
 	/** @since 1.0 */
@@ -37,7 +37,7 @@ class Parameterized implements IParameterized {
 		 * @override
 		 * @var T
 		 */
-		public readonly mixed $value,
+		public readonly mixed $data,
 
 		/**
 		 * @override

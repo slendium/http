@@ -20,7 +20,7 @@ interface Parameterized {
 	 * @since 1.0
 	 * @var T
 	 */
-	public mixed $value { get; }
+	public mixed $data { get; }
 
 	/**
 	 * The map of parameters associated with the value (usually an item or inner list).

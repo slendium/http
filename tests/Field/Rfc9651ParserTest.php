@@ -70,7 +70,7 @@ class Rfc9651ParserTest extends BaseStructuredValueParserTestCase {
 		$sut = new Rfc9651Parser;
 
 		// Act
-		$result = $sut->parseItem($input)->value;
+		$result = $sut->parseItem($input)->data;
 		$resultValue = $result->value instanceof DateTimeInterface
 			? $result->value->getTimestamp()
 			: $result->value;

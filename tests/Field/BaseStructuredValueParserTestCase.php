@@ -25,10 +25,10 @@ abstract class BaseStructuredValueParserTestCase extends TestCase {
 			if (!($member instanceof Parameterized)) {
 				throw new Exception('Given list contained something other than a Parameterized');
 			}
-			if ($member->value instanceof Traversable) {
-				$out[$key] = self::asArrayWithoutParameters($member->value);
-			} else if ($member->value instanceof Item) {
-				$out[$key] = $member->value->value;
+			if ($member->data instanceof Traversable) {
+				$out[$key] = self::asArrayWithoutParameters($member->data);
+			} else if ($member->data instanceof Item) {
+				$out[$key] = $member->data->value;
 			} else {
 				throw new Exception('Given list contained something other than Traversable|Item');
 			}
