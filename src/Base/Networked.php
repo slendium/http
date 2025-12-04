@@ -24,7 +24,7 @@ class Networked implements INetworked {
 		 * @override
 		 * @var T
 		 */
-		public readonly mixed $value,
+		public readonly mixed $payload,
 
 	) { }
 

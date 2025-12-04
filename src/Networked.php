@@ -20,6 +20,6 @@ interface Networked {
 	 * @since 1.0
 	 * @var T
 	 */
-	public mixed $value { get; }
+	public mixed $payload { get; }
 
 }
