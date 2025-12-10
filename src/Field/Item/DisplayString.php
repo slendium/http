@@ -18,7 +18,7 @@ use Slendium\Http\Field\Item as BaseItem;
  */
 final class DisplayString extends BaseItem {
 
-	/** @override */
+	#[Override]
 	public readonly string $value; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]

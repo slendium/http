@@ -18,7 +18,7 @@ use Slendium\Http\Field\Item as BaseItem;
  */
 final class ByteSequence extends BaseItem {
 
-	/** @overide */
+	#[Override]
 	public readonly string $value; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]

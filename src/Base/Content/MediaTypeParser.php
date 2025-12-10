@@ -2,11 +2,9 @@
 
 namespace Slendium\Http\Base\Content;
 
-use Slendium\Http\Base\{
-	HttpChar,
-	ParseException,
-	StringConsumer,
-};
+use Slendium\Http\Base\HttpChar;
+use Slendium\Http\Base\ParseException;
+use Slendium\Http\Base\StringConsumer;
 
 /**
  * @internal

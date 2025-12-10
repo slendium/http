@@ -18,7 +18,7 @@ use Slendium\Http\Field\Item as BaseItem;
  */
 final class Decimal extends BaseItem {
 
-	/** @override */
+	#[Override]
 	public readonly float $value; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]

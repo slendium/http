@@ -2,6 +2,8 @@
 
 namespace Slendium\Http\Base\Content;
 
+use Override;
+
 use Slendium\Http\Content\MediaTypeName as IMediaTypeName;
 
 /**
@@ -14,22 +16,16 @@ class MediaTypeName implements IMediaTypeName {
 	/** @since 1.0 */
 	public function __construct(
 
-		/**
-		 * @override
-		 * @var lowercase-string&non-empty-string
-		 */
+		/** @var lowercase-string&non-empty-string */
+		#[Override]
 		public readonly string $name,
 
-		/**
-		 * @override
-		 * @var (lowercase-string&non-empty-string)|null
-		 */
+		/** @var (lowercase-string&non-empty-string)|null */
+		#[Override]
 		public readonly ?string $facet = null,
 
-		/**
-		 * @override
-		 * @var (lowercase-string&non-empty-string)|null
-		 */
+		/** @var (lowercase-string&non-empty-string)|null */
+		#[Override]
 		public readonly ?string $syntax = null,
 
 	) { }

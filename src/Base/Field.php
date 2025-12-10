@@ -17,13 +17,11 @@ class Field implements IField {
 	/** @since 1.0 */
 	public function __construct(
 
-		/**
-		 * @override
-		 * @var lowercase-string&non-empty-string
-		 */
+		/** @var lowercase-string&non-empty-string */
+		#[Override]
 		public readonly string $name,
 
-		/** @override */
+		#[Override]
 		public readonly string $value,
 
 	) { }

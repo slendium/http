@@ -18,7 +18,7 @@ use Slendium\Http\Field\Item as BaseItem;
  */
 final class Boolean extends BaseItem {
 
-	/** @override */
+	#[Override]
 	public readonly bool $value; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]

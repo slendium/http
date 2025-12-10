@@ -2,6 +2,8 @@
 
 namespace Slendium\Http\Base\Content;
 
+use Override;
+
 use Slendium\Http\Content\MediaType as IMediaType;
 use Slendium\Http\Base\ParseException;
 
@@ -39,10 +41,10 @@ class MediaType implements IMediaType {
 	/** @since 1.0 */
 	public function __construct(
 
-		/** @override */
+		#[Override]
 		public readonly MediaTypeName $major,
 
-		/** @override */
+		#[Override]
 		public readonly MediaTypeName $minor,
 
 	) { }

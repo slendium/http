@@ -2,10 +2,11 @@
 
 namespace Slendium\Http\Base;
 
-use ArrayAccess,
-	Countable,
-	Stringable,
-	Traversable;
+use ArrayAccess;
+use Countable;
+use Override;
+use Stringable;
+use Traversable;
 
 use Slendium\Http\Url as IUrl;
 use Slendium\Http\Base\ParseException;
@@ -62,37 +63,29 @@ class Url implements IUrl {
 	/** @since 1.0 */
 	public function __construct(
 
-		/** @override */
+		#[Override]
 		public readonly ?string $scheme,
 
-		/** @override */
+		#[Override]
 		public readonly ?string $user,
 
-		/**
-		 * @override
-		 * @var ?non-empty-string
-		 */
+		/** @var ?non-empty-string */
+		#[Override]
 		public readonly ?string $host,
 
-		/**
-		 * @override
-		 * @var ?int<0,65535>
-		 */
+		/** @var ?int<0,65535> */
+		#[Override]
 		public readonly ?int $port,
 
-		/**
-		 * @override
-		 * @var ?non-empty-string
-		 */
+		/** @var ?non-empty-string */
+		#[Override]
 		public readonly ?string $path,
 
-		/**
-		 * @override
-		 * @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Traversable<non-empty-string,array<mixed>|string>)|null
-		 */
+		/** @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Traversable<non-empty-string,array<mixed>|string>)|null */
+		#[Override]
 		public readonly (ArrayAccess&Countable&Traversable)|null $query,
 
-		/** @override */
+		#[Override]
 		public readonly ?string $fragment,
 
 	) { }

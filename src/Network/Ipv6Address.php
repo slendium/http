@@ -4,10 +4,8 @@ namespace Slendium\Http\Network;
 
 use Override;
 
-use Slendium\Http\Base\{
-	ParseException,
-	SerializeException,
-};
+use Slendium\Http\Base\ParseException;
+use Slendium\Http\Base\SerializeException;
 
 /**
  * An IP version 6 network address.

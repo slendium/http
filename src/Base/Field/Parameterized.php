@@ -33,16 +33,12 @@ class Parameterized implements IParameterized {
 	/** @since 1.0 */
 	public function __construct(
 
-		/**
-		 * @override
-		 * @var T
-		 */
+		/** @var T */
+		 #[Override]
 		public readonly mixed $data,
 
-		/**
-		 * @override
-		 * @var ArrayAccess<(non-empty-string&lowercase-string)|int<0,max>,?Item>&Countable&Traversable<non-empty-string&lowercase-string,Item>
-		 */
+		/** @var ArrayAccess<(non-empty-string&lowercase-string)|int<0,max>,?Item>&Countable&Traversable<non-empty-string&lowercase-string,Item> */
+		#[Override]
 		public readonly ArrayAccess&Countable&Traversable $parameters,
 
 	) { }

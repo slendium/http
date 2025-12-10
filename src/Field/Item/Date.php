@@ -2,8 +2,8 @@
 
 namespace Slendium\Http\Field\Item;
 
-use DateTimeInterface,
-	Override;
+use DateTimeInterface;
+use Override;
 
 use Slendium\Http\Field\Item as BaseItem;
 
@@ -20,7 +20,7 @@ use Slendium\Http\Field\Item as BaseItem;
  */
 final class Date extends BaseItem {
 
-	/** @override */
+	#[Override]
 	public readonly DateTimeInterface $value; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]

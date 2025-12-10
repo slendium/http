@@ -2,8 +2,8 @@
 
 namespace Slendium\Http\Network;
 
-use Stringable,
-	Throwable;
+use Stringable;
+use Throwable;
 
 /**
  * @since 1.0
