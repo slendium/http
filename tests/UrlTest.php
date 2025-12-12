@@ -5,10 +5,8 @@ namespace Slendium\HttpTests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use Slendium\Http\Base\{
-	ParseException,
-	Url,
-};
+use Slendium\Http\Base\ParseException;
+use Slendium\Http\Base\Url;
 
 class UrlTest extends TestCase {
 
@@ -18,7 +16,7 @@ class UrlTest extends TestCase {
 
 		// Assert
 		$this->assertSame('ftp', $sut->scheme);
-		$this->assertSame('user', $sut->user);
+		$this->assertSame('user', $sut->userInfo);
 		$this->assertSame('test.example.com', $sut->host);
 		$this->assertSame(8080, $sut->port);
 		$this->assertSame('/path', $sut->path);

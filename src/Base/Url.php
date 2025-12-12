@@ -5,7 +5,6 @@ namespace Slendium\Http\Base;
 use ArrayAccess;
 use Countable;
 use Override;
-use Stringable;
 use Traversable;
 
 use Slendium\Http\Url as IUrl;
@@ -35,7 +34,7 @@ class Url implements IUrl {
 		return new self(
 			scheme: $parsed['scheme']
 				?? (\str_starts_with($input, '//') ? '' : null),
-			user: $parsed['user']
+			userInfo: $parsed['user']
 				?? null,
 			host: isset($parsed['host']) && $parsed['host'] !== ''
 				? $parsed['host']
@@ -67,7 +66,7 @@ class Url implements IUrl {
 		public readonly ?string $scheme,
 
 		#[Override]
-		public readonly ?string $user,
+		public readonly ?string $userInfo,
 
 		/** @var ?non-empty-string */
 		#[Override]
@@ -98,8 +97,8 @@ class Url implements IUrl {
 			} else if ($this->scheme !== null) {
 				$result = "{$this->scheme}://";
 			}
-			if ($this->user !== null) {
-				$result .= "{$this->user}@";
+			if ($this->userInfo !== null) {
+				$result .= "{$this->userInfo}@";
 			}
 			$result .= $this->host;
 			if ($this->port !== null) {

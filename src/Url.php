@@ -2,18 +2,25 @@
 
 namespace Slendium\Http;
 
-use ArrayAccess,
-	Countable,
-	Stringable,
-	Traversable;
+use ArrayAccess;
+use Countable;
+use Stringable;
+use Traversable;
 
 /**
- * A URL pointing to an online resource.
+ * A URI pointing to an online resource.
  *
- * Property names were chosen to match the PHP-native `parse_url()` function for consistency.
+ * Property names were chosen to match the PHP-native `Rfc3986\Uri` function for consistency. For
+ * security reasons the `__toString()` implementation MUST return the canonical RFC 3986 representation
+ * and it is therefore recommended to use the native type as a backing value.
  *
- * Since sending passwords in URL's is deprecated it was not included as a its own property. You can
- * append the `$user` property with a `:` to indicate an empty password (this is still allowed).
+ * Since sending passwords in URL's is deprecated it was not included as its own property. You can
+ * append the `$userInfo` property with a `:` to indicate an empty password (this is still allowed).
+ *
+ * The PHP 8.5+ native `Uri` type did not fit all use cases of this library, so this separate
+ * interface was kept with the release of PHP 8.5. Most notably it does not have a way to access or
+ * edit individual query parameters (since these are not well defined by standards). Additionally
+ * it keeps the deprecated "password" option around (for valid reasons).
  *
  * @see https://www.rfc-editor.org/rfc/rfc3986.html
  *
@@ -34,7 +41,7 @@ interface Url extends Stringable {
 	public ?string $scheme { get; }
 
 	/** @since 1.0 */
-	public ?string $user { get; }
+	public ?string $userInfo { get; }
 
 	/**
 	 * @since 1.0
@@ -62,6 +69,8 @@ interface Url extends Stringable {
 	 * A count of 0 indicates a single `?` while `NULL` indicates no query was present.
 	 *
 	 * Values are allowed to be lists/arrays to account for query strings such as `?map[a]=3&map[b]=2`.
+	 *
+	 * The `__toString()` implementation MUST return the canonical representation according to RFC 3986.
 	 *
 	 * @since 1.0
 	 * @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Traversable<non-empty-string,array<mixed>|string>)|null
