@@ -6,10 +6,8 @@ use Throwable;
 
 use PHPUnit\Framework\TestCase;
 
-use Slendium\Http\Base\{
-	ParseException,
-	StringConsumer,
-};
+use Slendium\Http\Base\ParseException;
+use Slendium\Http\Base\StringConsumer;
 
 final class StringConsumerTest extends TestCase {
 
@@ -61,7 +59,7 @@ final class StringConsumerTest extends TestCase {
 		$this->expectException(ParseException::class);
 
 		// Act
-		$sut->consume(1);
+		(void)$sut->consume(1);
 	}
 
 	public function test_consume_shouldThrow_whenLengthExceeded() {
@@ -72,8 +70,8 @@ final class StringConsumerTest extends TestCase {
 		$this->expectException(ParseException::class);
 
 		// Act
-		$sut->consume(2);
-		$sut->consume(3);
+		(void)$sut->consume(2);
+		(void)$sut->consume(3);
 	}
 
 	public function test_consume_shouldBeSequential_whenCalledOneByOne() {
