@@ -13,9 +13,9 @@ use TypeError;
  */
 abstract class Item {
 
-	private static Item\Boolean $booleanTrue; // TODO replace with static property hook in 8.5
+	private static Item\Boolean $booleanTrue;
 
-	private static Item\Boolean $booleanFalse; // TODO replace with static property hook in 8.5
+	private static Item\Boolean $booleanFalse;
 
 	/**
 	 * Gives access to the relevant PHP type.
