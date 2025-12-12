@@ -72,6 +72,8 @@ interface Uri extends Stringable {
 	 *
 	 * The `__toString()` implementation MUST return the canonical representation according to RFC 3986.
 	 *
+	 * Reminder that query keys are case-sensitive according to [RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#section-6.2.2.1).
+	 *
 	 * @since 1.0
 	 * @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Traversable<non-empty-string,array<mixed>|string>)|null
 	 */
