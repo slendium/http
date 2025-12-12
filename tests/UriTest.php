@@ -6,13 +6,13 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\Http\Base\ParseException;
-use Slendium\Http\Base\Url;
+use Slendium\Http\Base\Uri;
 
-class UrlTest extends TestCase {
+class UriTest extends TestCase {
 
 	public function test_fromString_shouldHaveEverything_whenInputHasEverything() {
 		// Act
-		$sut = Url::fromString('ftp://user:pass@test.example.com:8080/path?query=true#fragment');
+		$sut = Uri::fromString('ftp://user:pass@test.example.com:8080/path?query=true#fragment');
 
 		// Assert
 		$this->assertSame('ftp', $sut->scheme);
@@ -28,7 +28,7 @@ class UrlTest extends TestCase {
 
 	public function test_fromString_shouldReturnEmptyStringScheme_whenInputSchemeRelative() {
 		// Arrange
-		$sut = Url::fromString('//example.com');
+		$sut = Uri::fromString('//example.com');
 
 		// Act
 		$result = $sut->scheme;
@@ -37,7 +37,7 @@ class UrlTest extends TestCase {
 		$this->assertSame('', $result);
 	}
 
-	public static function unparseableUrls(): iterable {
+	public static function unparseableUris(): iterable {
 		yield [ 'http://' ];
 		yield [ 'http://?query=true' ];
 		yield [ 'http://#fragment' ];
@@ -45,18 +45,18 @@ class UrlTest extends TestCase {
 		yield [ 'file:///' ];
 	}
 
-	#[DataProvider('unparseableUrls')]
-	public function test_fromString_shouldThrow_whenUrlUnparseable(string $input) {
+	#[DataProvider('unparseableUris')]
+	public function test_fromString_shouldThrow_whenUriUnparseable(string $input) {
 		// Assert
 		$this->expectException(ParseException::class);
 
 		// Act
-		Url::fromString($input);
+		Uri::fromString($input);
 	}
 
 	public function test_fromString_shouldAccountForEmptyQuery_whenInputHasEmptyQuery() {
 		// Act
-		$sut = Url::fromString('//example.com?');
+		$sut = Uri::fromString('//example.com?');
 
 		// Assert
 		$this->assertSame('', $sut->scheme);
@@ -67,7 +67,7 @@ class UrlTest extends TestCase {
 
 	public function test_fromString_shouldAccountForMissingQuery_whenInputHasNoQuery() {
 		// Act
-		$sut = Url::fromString('//example.com');
+		$sut = Uri::fromString('//example.com');
 
 		// Assert
 		$this->assertSame('', $sut->scheme);
@@ -77,7 +77,7 @@ class UrlTest extends TestCase {
 
 	public function test_fromString_shouldAccountForEmptyFragment_whenInputHasEmptyFragment() {
 		// Act
-		$sut = Url::fromString('/path#');
+		$sut = Uri::fromString('/path#');
 
 		// Assert
 		$this->assertSame('/path', $sut->path);
@@ -86,7 +86,7 @@ class UrlTest extends TestCase {
 
 	public function test_fromString_shouldAccountForNullFragment_whenInputHasNoFragment() {
 		// Act
-		$sut = Url::fromString('/path');
+		$sut = Uri::fromString('/path');
 
 		// Assert
 		$this->assertSame('/path', $sut->path);
@@ -95,7 +95,7 @@ class UrlTest extends TestCase {
 
 	public function test_fromString_shouldParseQueryArrays_whenInputUsesArraySyntax() {
 		// Act
-		$sut = Url::fromString('/path?arr[]=1&arr[]=2&map[a]=a&map[b][]=b1&map[b][]=b2');
+		$sut = Uri::fromString('/path?arr[]=1&arr[]=2&map[a]=a&map[b][]=b1&map[b][]=b2');
 
 		// Assert
 		$this->assertSame('/path', $sut->path);

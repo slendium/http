@@ -7,29 +7,26 @@ use Countable;
 use Override;
 use Traversable;
 
-use Slendium\Http\Url as IUrl;
+use Slendium\Http\Uri as IUri;
 use Slendium\Http\Base\ParseException;
 
 /**
- * Basic URL implementation.
- *
- * This implementation explicitly rejects `file:///` URIs since they are not valid URLs, even though
- * PHP natively accepts them.
+ * RFC 3986 URI implementation.
  *
  * @since 1.0
  * @author C. Fahner
  * @copyright Slendium 2025
  */
-class Url implements IUrl {
+class Uri implements IUri {
 
 	/** @since 1.0 */
 	public static function fromString(string $input): self {
 		if (\str_starts_with($input, 'file:///')) {
-			throw new ParseException('URL could not be parsed');
+			throw new ParseException('URI could not be parsed');
 		}
 		$parsed = \parse_url($input);
 		if ($parsed === false) {
-			throw new ParseException('URL could not be parsed');
+			throw new ParseException('URI could not be parsed');
 		}
 		return new self(
 			scheme: $parsed['scheme']

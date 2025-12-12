@@ -28,7 +28,7 @@ use Traversable;
  * @author C. Fahner
  * @copyright Slendium 2025
  */
-interface Url extends Stringable {
+interface Uri extends Stringable {
 
 	/**
 	 * The scheme, such as `http`.
