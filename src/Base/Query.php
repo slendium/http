@@ -27,6 +27,10 @@ final class Query implements ArrayAccess, Countable, IteratorAggregate {
 
 	) { }
 
+	public function __toString(): string {
+		return \http_build_query($this->query, encoding_type: \PHP_QUERY_RFC3986);
+	}
+
 	#[Override]
 	public function offsetExists(mixed $offset): bool {
 		return isset($this->query[$offset]);
