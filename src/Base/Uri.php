@@ -30,8 +30,9 @@ class Uri implements IUri {
 			throw new ParseException('URI could not be parsed');
 		}
 		return new self(
-			scheme: $parsed['scheme']
-				?? (\str_starts_with($input, '//') ? '' : null),
+			scheme: isset($parsed['scheme']) && $parsed['scheme'] !== ''
+				? $parsed['scheme']
+				: null,
 			userInfo: $parsed['user']
 				?? null,
 			host: isset($parsed['host']) && $parsed['host'] !== ''
@@ -60,6 +61,7 @@ class Uri implements IUri {
 	/** @since 1.0 */
 	public function __construct(
 
+		/** @var ?non-empty-string */
 		#[Override]
 		public readonly ?string $scheme,
 
@@ -90,11 +92,10 @@ class Uri implements IUri {
 	public function __toString(): string {
 		$result = '';
 		if ($this->host !== null) {
-			if ($this->scheme === '') {
-				$result = '//';
-			} else if ($this->scheme !== null) {
-				$result = "{$this->scheme}://";
+			if ($this->scheme !== null) {
+				$result = "{$this->scheme}:";
 			}
+			$result .= '//';
 			if ($this->userInfo !== null) {
 				$result .= "{$this->userInfo}@";
 			}
@@ -107,7 +108,7 @@ class Uri implements IUri {
 			$result .= $this->path;
 		}
 		if ($this->query !== null) {
-			$result .= '?'.$this->query;
+			$result .= "?{$this->query}";
 		}
 		if ($this->fragment !== null) {
 			$result .= "#{$this->fragment}";

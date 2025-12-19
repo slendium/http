@@ -10,9 +10,7 @@ use Traversable;
 /**
  * A URI pointing to an online resource.
  *
- * Property names were chosen to match the PHP-native `Rfc3986\Uri` function for consistency. For
- * security reasons the `__toString()` implementation MUST return the canonical RFC 3986 representation
- * and it is therefore recommended to use the native type as a backing value.
+ * The `__toString()` implementation MUST return the canonical RFC 3986 representation.
  *
  * Since sending passwords in URL's is deprecated it was not included as its own property. You can
  * append the `$userInfo` property with a `:` to indicate an empty password (this is still allowed).
@@ -31,12 +29,8 @@ use Traversable;
 interface Uri extends Stringable {
 
 	/**
-	 * The scheme, such as `http`.
-	 *
-	 * Can be `NULL` to indicate absense of any scheme, can be an empty string to indicate a scheme-
-	 * relative url such as `//example.com`.
-	 *
 	 * @since 1.0
+	 * @var ?non-empty-string
 	 */
 	public ?string $scheme { get; }
 

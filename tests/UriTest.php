@@ -26,7 +26,7 @@ class UriTest extends TestCase {
 		$this->assertSame('fragment', $sut->fragment);
 	}
 
-	public function test_fromString_shouldReturnEmptyStringScheme_whenInputSchemeRelative() {
+	public function test_fromString_shouldReturnNullScheme_whenInputSchemeRelative() {
 		// Arrange
 		$sut = Uri::fromString('//example.com');
 
@@ -34,7 +34,7 @@ class UriTest extends TestCase {
 		$result = $sut->scheme;
 
 		// Assert
-		$this->assertSame('', $result);
+		$this->assertNull($result);
 	}
 
 	public static function unparseableUris(): iterable {
@@ -59,7 +59,7 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('//example.com?');
 
 		// Assert
-		$this->assertSame('', $sut->scheme);
+		$this->assertNull($sut->scheme);
 		$this->assertSame('example.com', $sut->host);
 		$this->assertNotNull($sut->query);
 		$this->assertSame(0, \count($sut->query));
@@ -70,7 +70,7 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('//example.com');
 
 		// Assert
-		$this->assertSame('', $sut->scheme);
+		$this->assertNull($sut->scheme);
 		$this->assertSame('example.com', $sut->host);
 		$this->assertNull($sut->query);
 	}
