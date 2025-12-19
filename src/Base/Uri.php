@@ -5,6 +5,7 @@ namespace Slendium\Http\Base;
 use ArrayAccess;
 use Countable;
 use Override;
+use Stringable;
 use Traversable;
 
 use Slendium\Http\Uri as IUri;
@@ -49,11 +50,11 @@ class Uri implements IUri {
 		);
 	}
 
-	/** @return ArrayView<non-empty-string,array<mixed>|string> */
-	private static function parseQuery(string $input): ArrayView {
+	/** @return ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Stringable&Traversable<non-empty-string,array<mixed>|string> */
+	private static function parseQuery(string $input): ArrayAccess&Countable&Stringable&Traversable {
 		$parsed = [ ];
 		\parse_str($input, $parsed);
-		return new ArrayView($parsed); // @phpstan-ignore return.type (phpstan thinks the keys are int|string, but I don't think this is possible)
+		return new Query($parsed); // @phpstan-ignore argument.type, return.type (phpstan thinks the keys are int|string, but I don't think this is possible, also there seems to be an error with ArrayAccess<TValue> which are identical??)
 	}
 
 	/** @since 1.0 */
@@ -77,9 +78,9 @@ class Uri implements IUri {
 		#[Override]
 		public readonly ?string $path,
 
-		/** @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Traversable<non-empty-string,array<mixed>|string>)|null */
+		/** @var (ArrayAccess<non-empty-string,array<mixed>|string|null>&Countable&Stringable&Traversable<non-empty-string,array<mixed>|string>)|null */
 		#[Override]
-		public readonly (ArrayAccess&Countable&Traversable)|null $query,
+		public readonly (ArrayAccess&Countable&Stringable&Traversable)|null $query,
 
 		#[Override]
 		public readonly ?string $fragment,
@@ -106,7 +107,7 @@ class Uri implements IUri {
 			$result .= $this->path;
 		}
 		if ($this->query !== null) {
-			$result .= '?'.\http_build_query(\iterator_to_array($this->query));
+			$result .= '?'.$this->query;
 		}
 		if ($this->fragment !== null) {
 			$result .= "#{$this->fragment}";
