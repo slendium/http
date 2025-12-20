@@ -43,7 +43,6 @@ class UriTest extends TestCase {
 		yield [ 'http://?query=true' ];
 		yield [ 'http://#fragment' ];
 		yield [ 'http:///' ];
-		yield [ 'file:///' ];
 	}
 
 	#[DataProvider('unparseableUris')]

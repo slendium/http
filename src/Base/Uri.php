@@ -23,9 +23,6 @@ class Uri implements IUri {
 
 	/** @since 1.0 */
 	public static function fromString(string $input): Error|self {
-		if (\str_starts_with($input, 'file:///')) {
-			return new ParseError('File URIs are not supported');
-		}
 		$parsed = \parse_url($input);
 		if ($parsed === false) {
 			return new ParseError('URI could not be parsed');
