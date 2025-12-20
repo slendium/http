@@ -8,8 +8,9 @@ use Override;
 use Stringable;
 use Traversable;
 
+use Slendium\Http\Error;
 use Slendium\Http\Uri as IUri;
-use Slendium\Http\Base\ParseException;
+use Slendium\Http\Base\ParseError;
 
 /**
  * RFC 3986 URI implementation.
@@ -21,13 +22,13 @@ use Slendium\Http\Base\ParseException;
 class Uri implements IUri {
 
 	/** @since 1.0 */
-	public static function fromString(string $input): self {
+	public static function fromString(string $input): Error|self {
 		if (\str_starts_with($input, 'file:///')) {
-			throw new ParseException('URI could not be parsed');
+			return new ParseError('File URIs are not supported');
 		}
 		$parsed = \parse_url($input);
 		if ($parsed === false) {
-			throw new ParseException('URI could not be parsed');
+			return new ParseError('URI could not be parsed');
 		}
 		return new self(
 			scheme: isset($parsed['scheme']) && $parsed['scheme'] !== ''

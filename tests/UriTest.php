@@ -5,6 +5,7 @@ namespace Slendium\HttpTests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+use Slendium\Http\Error;
 use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\Uri;
 
@@ -46,12 +47,12 @@ class UriTest extends TestCase {
 	}
 
 	#[DataProvider('unparseableUris')]
-	public function test_fromString_shouldThrow_whenUriUnparseable(string $input) {
-		// Assert
-		$this->expectException(ParseException::class);
-
+	public function test_fromString_shouldReturnError_whenUriUnparseable(string $input) {
 		// Act
-		Uri::fromString($input);
+		$result = Uri::fromString($input);
+
+		// Assert
+		$this->assertInstanceOf(Error::class, $result);
 	}
 
 	public function test_fromString_shouldAccountForEmptyQuery_whenInputHasEmptyQuery() {
