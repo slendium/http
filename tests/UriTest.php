@@ -6,8 +6,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\Http\Error;
-use Slendium\Http\Base\ParseException;
-use Slendium\Http\Base\Uri;
+use Slendium\Http\Uri;
 
 class UriTest extends TestCase {
 
@@ -16,15 +15,16 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('ftp://user:pass@test.example.com:8080/path?query=true#fragment');
 
 		// Assert
-		$this->assertSame('ftp', $sut->scheme);
-		$this->assertSame('user', $sut->userInfo);
-		$this->assertSame('test.example.com', $sut->host);
-		$this->assertSame(8080, $sut->port);
-		$this->assertSame('/path', $sut->path);
-		$this->assertSame(1, \count($sut->query));
-		$this->assertSame('true', $sut->query['query']);
-		$this->assertNull($sut->query['not_query']);
-		$this->assertSame('fragment', $sut->fragment);
+		$this->assertSame('ftp', $sut->getScheme());
+		$this->assertSame('user:pass', $sut->getUserInfo());
+		$this->assertSame('user', $sut->getUsername());
+		$this->assertSame('test.example.com', $sut->getHost());
+		$this->assertSame(8080, $sut->getPort());
+		$this->assertSame('/path', $sut->getPath());
+		$this->assertSame(1, \count($sut->getQuery()));
+		$this->assertSame('true', $sut->getQuery()['query']);
+		$this->assertNull($sut->getQuery()['not_query']);
+		$this->assertSame('fragment', $sut->getFragment());
 	}
 
 	public function test_fromString_shouldReturnNullScheme_whenInputSchemeRelative() {
@@ -32,17 +32,25 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('//example.com');
 
 		// Act
-		$result = $sut->scheme;
+		$result = $sut->getScheme();
 
 		// Assert
 		$this->assertNull($result);
 	}
 
 	public static function unparseableUris(): iterable {
-		yield [ 'http://' ];
-		yield [ 'http://?query=true' ];
-		yield [ 'http://#fragment' ];
-		yield [ 'http:///' ];
+		yield [ 'http://example.com/foo bar' ];
+		yield [ 'http://example.com/<foo>' ];
+		yield [ 'http://example.com/%' ];
+		yield [ 'http://example.com/%1' ];
+		yield [ 'http://example.com/%qq' ];
+		yield [ '0http://example.com' ];
+		yield [ 'http*://example.com' ];
+		yield [ 'http*://example.com/path\\with\\backslashes' ];
+		yield [ '://example.com' ];
+		yield [ '//example.com:invalid' ];
+		yield [ '//example.com:-1' ];
+		yield [ '//example.com##fragment' ];
 	}
 
 	#[DataProvider('unparseableUris')]
@@ -54,15 +62,31 @@ class UriTest extends TestCase {
 		$this->assertInstanceOf(Error::class, $result);
 	}
 
+	public static function edgeCaseUris(): iterable {
+		yield [ 'http+a-b.c://example.com' ];
+		yield [ 'http://example.com:90000' ]; // RFC 3986 allows invalid port numbers too
+		yield [ '//example.com//path??query' ];
+		yield [ '//example.com#fragment?query' ];
+	}
+
+	#[DataProvider('edgeCaseUris')]
+	public function test_fromString_shouldReturnUri_whenEdgeCaseGiven(string $input) {
+		// Act
+		$result = Uri::fromString($input);
+
+		// Assert
+		$this->assertInstanceOf(Uri::class, $result);
+	}
+
 	public function test_fromString_shouldAccountForEmptyQuery_whenInputHasEmptyQuery() {
 		// Act
 		$sut = Uri::fromString('//example.com?');
 
 		// Assert
-		$this->assertNull($sut->scheme);
-		$this->assertSame('example.com', $sut->host);
-		$this->assertNotNull($sut->query);
-		$this->assertSame(0, \count($sut->query));
+		$this->assertNull($sut->getScheme());
+		$this->assertSame('example.com', $sut->getHost());
+		$this->assertNotNull($sut->getQuery());
+		$this->assertSame(0, \count($sut->getQuery()));
 	}
 
 	public function test_fromString_shouldAccountForMissingQuery_whenInputHasNoQuery() {
@@ -70,9 +94,9 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('//example.com');
 
 		// Assert
-		$this->assertNull($sut->scheme);
-		$this->assertSame('example.com', $sut->host);
-		$this->assertNull($sut->query);
+		$this->assertNull($sut->getScheme());
+		$this->assertSame('example.com', $sut->getHost());
+		$this->assertNull($sut->getQuery());
 	}
 
 	public function test_fromString_shouldAccountForEmptyFragment_whenInputHasEmptyFragment() {
@@ -80,8 +104,8 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('/path#');
 
 		// Assert
-		$this->assertSame('/path', $sut->path);
-		$this->assertSame('', $sut->fragment);
+		$this->assertSame('/path', $sut->getPath());
+		$this->assertSame('', $sut->getFragment());
 	}
 
 	public function test_fromString_shouldAccountForNullFragment_whenInputHasNoFragment() {
@@ -89,19 +113,19 @@ class UriTest extends TestCase {
 		$sut = Uri::fromString('/path');
 
 		// Assert
-		$this->assertSame('/path', $sut->path);
-		$this->assertNull($sut->fragment);
+		$this->assertSame('/path', $sut->getPath());
+		$this->assertNull($sut->getFragment());
 	}
 
 	public function test_fromString_shouldParseQueryArrays_whenInputUsesArraySyntax() {
 		// Act
-		$sut = Uri::fromString('/path?arr[]=1&arr[]=2&map[a]=a&map[b][]=b1&map[b][]=b2');
+		$sut = Uri::fromString('/path?arr%5B%5D=1&arr%5B%5D=2&map%5Ba%5D=a&map%5Bb%5D%5B%5D=b1&map%5Bb%5D%5B%5D=b2');
 
 		// Assert
-		$this->assertSame('/path', $sut->path);
-		$this->assertSame(2, \count($sut->query));
-		$this->assertSame([ '1', '2' ], $sut->query['arr']);
-		$this->assertSame([ 'a' => 'a', 'b' => [ 'b1', 'b2' ] ], $sut->query['map']);
+		$this->assertSame('/path', $sut->getPath());
+		$this->assertSame(2, \count($sut->getQuery()));
+		$this->assertSame([ '1', '2' ], $sut->getQuery()['arr']);
+		$this->assertSame([ 'a' => 'a', 'b' => [ 'b1', 'b2' ] ], $sut->getQuery()['map']);
 	}
 
 }
