@@ -129,11 +129,11 @@ final class Uri {
 
 	/**
 	 * @since 1.0
-	 * @return ?int<0,65535>
+	 * @return ?int<0,max>
 	 */
 	public function getPort(): ?int {
 		$port = $this->uri->getPort();
-		return $port === null || ($port >= 0 && $port <= 65535)
+		return $port === null || $port >= 0
 			? $port
 			: null;
 	}
