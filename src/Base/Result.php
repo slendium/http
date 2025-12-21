@@ -1,8 +1,9 @@
 <?php
 
-namespace Slendium\Http;
+namespace Slendium\Http\Base;
 
 use Closure;
+use LogicException;
 use Throwable;
 
 /**
@@ -56,6 +57,28 @@ final class Result {
 		public readonly ?Throwable $thrown,
 
 	) { }
+
+	/**
+	 * Returns the result if `$this->hasSucceeded && $this->result !== null`.
+	 * @return TResult
+	 */
+	public function getResult(): mixed {
+		if ($this->hasSucceeded && $this->result !== null) {
+			return $this->result;
+		}
+		throw new LogicException('Result object is not in a state where it is valid to call getResult()');
+	}
+
+	/**
+	 * Returns the throwable if `$this->hasFailed && $this->thrown !== null`.
+	 * @return Throwable
+	 */
+	public function getThrowable(): Throwable {
+		if ($this->hasFailed && $this->thrown !== null) {
+			return $this->thrown;
+		}
+		throw new LogicException('Result object is not in a state where it is valid to call getThrown()');
+	}
 
 	/** @return ?TResult */
 	public function getResultOrNull(): mixed {
