@@ -31,8 +31,8 @@ if ($request->body instanceof Structured) {
 	$post = $request->body->root; // ArrayAccess&Countable&Traversable
 }
 
-// access to query arguments
-$queryData = $request->url->query; // (ArrayAccess&Countable&Traversable)|null
+// access query arguments
+$queryData = $request->url->getQuery(); // (ArrayAccess&Countable&Traversable)|null
 
 // implementation-agnostic access to cookies (a parsed header, $_COOKIES or even mocked values)
 if ($request->headers['cookies'] instanceof Structured) {
