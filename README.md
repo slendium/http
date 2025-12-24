@@ -35,10 +35,10 @@ if ($request->body instanceof Structured) {
 $queryData = $request->url->getQuery(); // (ArrayAccess&Countable&Traversable)|null
 
 // implementation-agnostic access to cookies (a parsed header, $_COOKIES or even mocked values)
-if ($request->headers['cookies'] instanceof Structured) {
-	$cookies = $request->headers['cookies']->root; // ArrayAccess&Countable&Traversable
+if ($request->headers['cookie'] instanceof Structured) {
+	$cookies = $request->headers['cookie']->root; // ArrayAccess&Countable&Traversable
 	// or get the raw value instead
-	$cookieString = $request->headers['cookies']->value;
+	$cookieString = $request->headers['cookie']->value;
 }
 ```
 
