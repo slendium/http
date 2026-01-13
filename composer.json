@@ -1,6 +1,6 @@
 {
 	"name": "slendium/http",
-	"description": "A Slendium recommendation on handling HTTP messages.",
+	"description": "A framework-agnostic library for interoperable HTTP messaging.",
 	"type": "library",
 	"license": "MIT",
 	"require": {
