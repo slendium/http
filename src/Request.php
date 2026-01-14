@@ -18,6 +18,6 @@ interface Request extends Message {
 	 *
 	 * @since 1.0
 	 */
-	public Uri $url { get; }
+	public Uri $uri { get; }
 
 }
