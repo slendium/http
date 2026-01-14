@@ -3,7 +3,7 @@
 A framework-agnostic PHP library for handling HTTP. Includes:
 
 * PHPDoc type annotations for static analyzers
-* Common types related to HTTP, such as `Field`, `MediaType`, `Url` and `IpAddress`
+* Common types related to HTTP, such as `Field`, `MediaType`, `Uri` and `IpAddress`
 * Parsing and serialization of IPv4 and IPv6 addresses
 * Parsing and serialization of structured fields per [RFC 9651](https://www.rfc-editor.org/rfc/rfc9651.html)
 
@@ -32,7 +32,7 @@ if ($request->body instanceof Structured) {
 }
 
 // access query arguments
-$queryData = $request->url->getQuery(); // (ArrayAccess&Countable&Traversable)|null
+$queryData = $request->uri->getQuery(); // (ArrayAccess&Countable&Traversable)|null
 
 // implementation-agnostic access to cookies (a parsed header, $_COOKIES or even mocked values)
 if ($request->headers['cookie'] instanceof Structured) {
