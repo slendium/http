@@ -10,6 +10,8 @@ use Slendium\Http\Field\Item as BaseItem;
  * Display Strings are similar to Strings, in that they consist of zero or more characters, but they
  * allow Unicode scalar values (i.e., all Unicode code points except for surrogates), unlike Strings.
  *
+ * `Example: %"This is intended for display to %c3%bcsers."`
+ *
  * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-3.3.8
  *
  * @since 1.0
