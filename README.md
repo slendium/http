@@ -56,7 +56,7 @@ if ($request->body instanceof Structured) {
 }
 ```
 
-### Structured fields
+### Obtain structured values
 
 ```php
 // check if implementation recognized the header
@@ -72,6 +72,27 @@ if ($field instanceof DictionaryField) {
 	$item = $field->toItem();
 	if ($item instanceof Item\BinarySequence) { ... } // etc.
 }
+```
+
+### Parse or serialize structured values
+
+```php
+$value = $headers['x-custom-header']->value;
+
+// parse strictly according to the spec
+$strict = new Rfc9651Parser();
+$asList = $strict->parseList($value);
+$asDictionary = $strict->parseDictionary($value);
+$asItem = $strict->parseItem($value);
+
+// parse with higher error tolerance
+$lenient = new LenientParser();
+$asList = $lenient->parseList($value);
+// ...etc
+
+// serialize strictly according to the spec
+$serializer = new Rfc9651Serializer();
+echo $serializer->serializeItem(new Item\DisplayString('Hello')); // prints %"Hello"
 ```
 
 ### IP-addresses
