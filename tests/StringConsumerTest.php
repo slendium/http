@@ -9,20 +9,22 @@ use PHPUnit\Framework\TestCase;
 use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\StringConsumer;
 
+/**
+ * @internal
+ * @author C. Fahner
+ * @copyright Slendium 2025-2026
+ */
 final class StringConsumerTest extends TestCase {
 
-	public function test_hasMore_shouldBeTrue_whenInputNotEmpty() {
-		// Arrange
+	public function test_hasMore_shouldBeTrue_whenInputNotEmpty(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$sut->discard(1);
 
-		// Assert
 		$this->assertTrue($sut->hasMore);
 	}
 
-	public function test_hasMore_shouldBeFalse_whenInputEmptied() {
+	public function test_hasMore_shouldBeFalse_whenInputEmptied(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 
@@ -39,19 +41,16 @@ final class StringConsumerTest extends TestCase {
 		$this->assertFalse($sut->hasMore);
 	}
 
-	public function test_consume_shouldReturn_whenInputNotEmpty() {
-		// Arrange
+	public function test_consume_shouldReturn_whenInputNotEmpty(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$result = $sut->consume(1);
 
-		// Assert
 		$this->assertSame('t', $result);
 		$this->assertTrue($sut->hasMore);
 	}
 
-	public function test_consume_shouldThrow_whenInputEmpty() {
+	public function test_consume_shouldThrow_whenInputEmpty(): void {
 		// Arrange
 		$sut = new StringConsumer('');
 
@@ -62,7 +61,7 @@ final class StringConsumerTest extends TestCase {
 		(void)$sut->consume(1);
 	}
 
-	public function test_consume_shouldThrow_whenLengthExceeded() {
+	public function test_consume_shouldThrow_whenLengthExceeded(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 
@@ -74,7 +73,7 @@ final class StringConsumerTest extends TestCase {
 		(void)$sut->consume(3);
 	}
 
-	public function test_consume_shouldBeSequential_whenCalledOneByOne() {
+	public function test_consume_shouldBeSequential_whenCalledOneByOne(): void {
 		// Arrange
 		$sut = new StringConsumer('12345');
 
@@ -91,20 +90,17 @@ final class StringConsumerTest extends TestCase {
 		$this->assertFalse($sut->hasMore);
 	}
 
-	public function test_discard_shouldNotThrow_whenStringHasMore() {
-		// Arrange
+	public function test_discard_shouldNotThrow_whenStringHasMore(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		while ($sut->hasMore) {
 			$sut->discard(1);
 		}
 
-		// Assert
 		$this->expectNotToPerformAssertions();
 	}
 
-	public function test_discard_shouldThrow_whenStringHasNoMore() {
+	public function test_discard_shouldThrow_whenStringHasNoMore(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 
@@ -119,52 +115,40 @@ final class StringConsumerTest extends TestCase {
 		$sut->discard(1);
 	}
 
-	public function test_discardSpaces_shouldDiscardSpacesAtStart() {
-		// Arrange
+	public function test_discardSpaces_shouldDiscardSpacesAtStart(): void {
 		$sut = new StringConsumer('   test');
 
-		// Act
 		$sut->discardSpaces();
 
-		// Assert
 		$this->assertSame('t', $sut->peek(1));
 	}
 
-	public function test_peek_shouldReturnString_whenCharsRemaining() {
-		// Arrange
+	public function test_peek_shouldReturnString_whenCharsRemaining(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$result = $sut->peek(1);
 
-		// Assert
 		$this->assertSame('t', $result);
 	}
 
-	public function test_peek_shouldReturnString_withMultipleChars() {
-		// Arrange
+	public function test_peek_shouldReturnString_withMultipleChars(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$result = $sut->peek(2);
 
-		// Assert
 		$this->assertSame('te', $result);
 	}
 
-	public function test_peek_shouldReturnEmpty_whenStringEmptied() {
-		// Arrange
+	public function test_peek_shouldReturnEmpty_whenStringEmptied(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$sut->discard(4);
 		$result = $sut->peek(1);
 
-		// Assert
 		$this->assertSame('', $result);
 	}
 
-	public function test_peek_shouldMatchConsume_whileStringHasMore() {
+	public function test_peek_shouldMatchConsume_whileStringHasMore(): void {
 		// Arrange
 		$sut = new StringConsumer("abc'\n\t\r:*~XYZ\0".\chr(0x02));
 
@@ -177,29 +161,23 @@ final class StringConsumerTest extends TestCase {
 		}
 	}
 
-	public function test_peekEquals_shouldReturnTrue_whenAnyCharMatches() {
-		// Arrange
+	public function test_peekEquals_shouldReturnTrue_whenAnyCharMatches(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$result = $sut->peekEquals('x', 'y', 'z', 't');
 
-		// Assert
 		$this->assertTrue($result);
 	}
 
-	public function test_peekEquals_shouldReturnFalse_whenNoCharMatches() {
-		// Arrange
+	public function test_peekEquals_shouldReturnFalse_whenNoCharMatches(): void {
 		$sut = new StringConsumer('test');
 
-		// Act
 		$result = $sut->peekEquals('x', 'u', 'p');
 
-		// Assert
 		$this->assertFalse($result);
 	}
 
-	public function test_expect_throws_whenNoCharMatches() {
+	public function test_expect_throws_whenNoCharMatches(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 
@@ -210,7 +188,7 @@ final class StringConsumerTest extends TestCase {
 		$sut->expect([ 'x', 'y', 'z' ], 'error message');
 	}
 
-	public function test_rewind_shouldNotThrow_whenNotAtTheStart() {
+	public function test_rewind_shouldNotThrow_whenNotAtTheStart(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 		$sut->discard(2);
@@ -228,7 +206,7 @@ final class StringConsumerTest extends TestCase {
 		$this->assertSame('t', $sut->peek(1));
 	}
 
-	public function test_rewind_shouldThrow_whenGoingBeyondTheStart() {
+	public function test_rewind_shouldThrow_whenGoingBeyondTheStart(): void {
 		// Arrange
 		$sut = new StringConsumer('test');
 		$sut->discard(2);
