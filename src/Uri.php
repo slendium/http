@@ -5,12 +5,13 @@ namespace Slendium\Http;
 use ArrayAccess;
 use Closure;
 use Countable;
+use Exception;
 use Stringable;
 use Traversable;
 
 use Uri\Rfc3986\Uri as Rfc3986Uri;
 
-use Slendium\Http\Base\ParseError;
+use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\Query;
 use Slendium\Http\Base\Result;
 
@@ -42,10 +43,10 @@ use Slendium\Http\Base\Result;
 final class Uri {
 
 	/** @since 1.0 */
-	public static function fromString(string $input): Error|self {
+	public static function fromString(string $input): Exception|self {
 		$result = Result::try(static fn() => new Rfc3986Uri($input));
 		if ($result->hasFailed) {
-			return new ParseError('Could not parse URI: '.$result->getThrowable()->getMessage());
+			return new ParseException('Could not parse URI', previous: $result->getThrowable());
 		}
 		$uri = $result->getResult();
 		return new self($uri, $uri->getQuery() !== null
@@ -67,7 +68,7 @@ final class Uri {
 		string $path = '',
 		(ArrayAccess&Countable&Stringable&Traversable)|null $query = null,
 		?string $fragment = null,
-	): Error|self {
+	): Exception|self {
 		$result = Result::try(static function() use ($scheme, $userInfo, $host, $port, $path, $query, $fragment) {
 			return new Rfc3986Uri('')
 				->withScheme($scheme)
@@ -80,7 +81,7 @@ final class Uri {
 		});
 		return $result->hasSucceeded
 			? new self($result->getResult(), $query)
-			: new ParseError('Could not create URI: '.$result->getThrowable()->getMessage());
+			: new ParseException('Could not create URI', previous: $result->getThrowable());
 	}
 
 	private function __construct(
