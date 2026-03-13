@@ -13,8 +13,8 @@ namespace Slendium\Http\Network;
  * adding other network information later without compatibility issues.
  *
  * @since 1.0
- * @author
- * @copyright
+ * @author C. Fahner
+ * @copyright Slendium 2025
  */
 final class SocketAddress {
 
