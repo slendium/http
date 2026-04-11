@@ -116,7 +116,7 @@ This library serves a similar purpose as [PSR-7](https://www.php-fig.org/psr/psr
 not to use PSR-7 was based on the following factors:
 
 * The design has aged, many of the interface "getters" can be replaced by property hooks now
-* The interfaces force implementation of a builder pattern - e.g. `withMethod()` - which requires
+* The interfaces force implementation of a wither pattern - e.g. `withMethod()` - which requires
   implementing a lot of methods you don't need when you are simply responding to a single request
   received through PHP/CGI
 * Some of the interfaces contain methods that could be folded into built-in PHP types: e.g.
