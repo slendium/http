@@ -17,7 +17,7 @@ use Slendium\Http\Field\Parameterized as IParameterized;
  * @author C. Fahner
  * @copyright Slendium 2025
  */
-class Parameterized implements IParameterized {
+readonly class Parameterized implements IParameterized {
 
 	/**
 	 * Creates a new parameterized but return-hints the interface to help static analyzers.
@@ -30,16 +30,26 @@ class Parameterized implements IParameterized {
 		return new self($data, $parameters);
 	}
 
+	/**
+	 * Creates a new `Parameterized` without an empty parameter list.
+	 * @template TValue
+	 * @param TValue $data
+	 * @return IParameterized<TValue>
+	 */
+	public static function withoutParameters(mixed $data): IParameterized {
+		return new self($data, new Parameters([ ]));
+	}
+
 	/** @since 1.0 */
 	public function __construct(
 
 		/** @var T */
 		 #[Override]
-		public readonly mixed $data,
+		public mixed $data,
 
 		/** @var ArrayAccess<(non-empty-string&lowercase-string)|int<0,max>,?Item>&Countable&Traversable<non-empty-string&lowercase-string,Item> */
 		#[Override]
-		public readonly ArrayAccess&Countable&Traversable $parameters,
+		public ArrayAccess&Countable&Traversable $parameters,
 
 	) { }
 
