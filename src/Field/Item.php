@@ -3,7 +3,6 @@
 namespace Slendium\Http\Field;
 
 use DateTimeInterface;
-use TypeError;
 
 /**
  * Base class for all items.
