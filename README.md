@@ -9,7 +9,7 @@ A framework-agnostic PHP library for handling HTTP. Includes:
 
 ## Installation
 
-Requires **PHP >= 8.5**. Simply run `composer install slendium/http` to add it to your project. Most
+Requires **PHP >= 8.5**. Simply run `composer require slendium/http` to add it to your project. Most
 likely you do not want to use this package directly, but use the following implementation(s) instead:
 
 * [slendium/http-superglobals](https://github.com/slendium/http-superglobals) - implements these interfaces
