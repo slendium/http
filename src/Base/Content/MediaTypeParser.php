@@ -27,7 +27,7 @@ class MediaTypeParser {
 
 	private static function parseName(StringConsumer $inputString): MediaTypeName {
 		$firstChar = $inputString->peek(1);
-		if (!HttpChar::isAlpha($firstChar) && !HttpChar::isDigit($firstChar)) {
+		if ($firstChar === '' || !HttpChar::isAlpha($firstChar) && !HttpChar::isDigit($firstChar)) {
 			throw new ParseException('First character of a media type name must be ALPHA or DIGIT (RFC 6838, 4.2)');
 		}
 
