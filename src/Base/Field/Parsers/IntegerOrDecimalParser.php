@@ -37,7 +37,8 @@ final class IntegerOrDecimalParser {
 		}
 
 		// 6. If the first character of input_string is not a DIGIT, fail parsing.
-		if (!HttpChar::isDigit($inputString->peek(1))) {
+		$firstChar = $inputString->peek(1);
+		if ($firstChar === '' || !HttpChar::isDigit($firstChar)) {
 			throw new ParseException('The first character of an integer or decimal must be a digit (RFC 9651, 4.2.4, 6)');
 		}
 

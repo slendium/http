@@ -20,7 +20,7 @@ final class KeyParser {
 	public static function parse9651(StringConsumer $inputString): string {
 		// 1. If the first character of input_string is not lcalpha or "*", fail parsing.
 		$firstChar = $inputString->peek(1);
-		if ($firstChar !== '*' && !HttpChar::isLowercaseAlpha($firstChar)) {
+		if ($firstChar === '' || $firstChar !== '*' && !HttpChar::isLowercaseAlpha($firstChar)) {
 			throw new ParseException('Key must start with "*" or lowercase alpha (RFC 9651, 4.2.3.3, 1)');
 		}
 
@@ -33,7 +33,8 @@ final class KeyParser {
 		while ($inputString->hasMore) {
 			// 3.1. If the first character of input_string is not one of lcalpha, DIGIT, "_", "-", ".", or "*", return output_string.
 			$char = $inputString->peek(1);
-			if (!HttpChar::isLowercaseAlpha($char)
+			if ($char === ''
+				|| !HttpChar::isLowercaseAlpha($char)
 				&& !HttpChar::isDigit($char)
 				&& $char !== '_'
 				&& $char !== '-'

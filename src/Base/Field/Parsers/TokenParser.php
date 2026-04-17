@@ -18,7 +18,7 @@ final class TokenParser {
 	public static function parse9651(StringConsumer $inputString): Item\Token {
 		// 1. If the first character of input_string is not ALPHA or "*", fail parsing.
 		$firstChar = $inputString->peek(1);
-		if (!HttpChar::isAlpha($firstChar) && $firstChar !== '*') {
+		if ($firstChar === '' || !HttpChar::isAlpha($firstChar) && $firstChar !== '*') {
 			throw new ParseException('First character of a token must be ALPHA or "*" (RFC 9651, 4.2.6, 1)');
 		}
 		$inputString->discard(1);
@@ -31,7 +31,7 @@ final class TokenParser {
 		while ($inputString->hasMore) {
 			$char = $inputString->peek(1);
 			// 3.1. If the first character of input_string is not in tchar, ":", or "/", return output_string.
-			if (!HttpChar::isTChar($char) && $char !== ':' && $char !== '/') {
+			if ($char === '' || !HttpChar::isTChar($char) && $char !== ':' && $char !== '/') {
 				return Item::Token($outputString);
 			}
 			// 3.2. Let char be the result of consuming the first character of input_string.
