@@ -2,10 +2,10 @@
 
 namespace Slendium\Http;
 
-use ArrayAccess,
-	Countable,
-	Stringable,
-	Traversable;
+use ArrayAccess;
+use Countable;
+use Stringable;
+use Traversable;
 
 /**
  * A generic HTTP message.
