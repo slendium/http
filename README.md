@@ -92,7 +92,7 @@ $asList = $lenient->parseList($value);
 
 // serialize strictly according to the spec
 $serializer = new Rfc9651Serializer();
-echo $serializer->serializeItem(new Item\DisplayString('Hello')); // prints %"Hello"
+echo $serializer->serializeItem(Item::DisplayString('Hello')); // prints %"Hello"
 ```
 
 ### IP-addresses
