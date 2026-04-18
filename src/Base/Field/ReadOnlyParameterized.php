@@ -8,25 +8,25 @@ use Override;
 use Traversable;
 
 use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @since 1.0
  * @template T
- * @implements IParameterized<T>
+ * @implements Parameterized<T>
  * @author C. Fahner
  * @copyright Slendium 2025
  */
-readonly class Parameterized implements IParameterized {
+readonly class ReadOnlyParameterized implements Parameterized {
 
 	/**
 	 * Creates a new parameterized but return-hints the interface to help static analyzers.
 	 * @template TValue
 	 * @param TValue $data
 	 * @param ArrayAccess<(non-empty-string&lowercase-string)|int<0,max>,?Item>&Countable&Traversable<non-empty-string&lowercase-string,Item> $parameters
-	 * @return IParameterized<TValue>
+	 * @return Parameterized<TValue>
 	 */
-	public static function newInterface(mixed $data, ArrayAccess&Countable&Traversable $parameters): IParameterized {
+	public static function newInterface(mixed $data, ArrayAccess&Countable&Traversable $parameters): Parameterized {
 		return new self($data, $parameters);
 	}
 
@@ -34,9 +34,9 @@ readonly class Parameterized implements IParameterized {
 	 * Creates a new `Parameterized` without an empty parameter list.
 	 * @template TValue
 	 * @param TValue $data
-	 * @return IParameterized<TValue>
+	 * @return Parameterized<TValue>
 	 */
-	public static function withoutParameters(mixed $data): IParameterized {
+	public static function withoutParameters(mixed $data): Parameterized {
 		return new self($data, new Parameters([ ]));
 	}
 

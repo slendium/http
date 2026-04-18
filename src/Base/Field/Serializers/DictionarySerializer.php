@@ -2,10 +2,10 @@
 
 namespace Slendium\Http\Base\Field\Serializers;
 
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
 use Slendium\Http\Base\SerializeException;
 use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
@@ -22,9 +22,9 @@ final class DictionarySerializer {
 
 		// 2. For each member_key with a value of (member_value, parameters) in input_dictionary:
 		foreach ($input as $member_key => $member) {
-			$member = $member instanceof IParameterized
+			$member = $member instanceof Parameterized
 				? $member
-				: Parameterized::withoutParameters($member);
+				: ReadOnlyParameterized::withoutParameters($member);
 			$serial_member = '';
 			// 2.1. Append the result of running Serializing a Key (Section 4.1.1.3) with member's member_key to output.
 			$serial_key = KeySerializer::serialize9651($member_key);

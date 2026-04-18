@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\Http\Base\Field\Parameters;
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
 use Slendium\Http\Base\Field\Rfc9651Serializer;
 use Slendium\Http\Field\Item;
 
@@ -24,8 +24,8 @@ class Rfc9651SerializerTest extends TestCase {
 
 	public static function validDictionaryCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 'test' => 3, 'bool' => true, 'list' => [ 1, 2 ] ], 'test=3, bool, list=(1 2)' ];
-		yield [ [ 'test' => new Parameterized(1, new Parameters([ 'param' => 1.0 ])), 'bool' => false ], 'test=1;param=1.0, bool=?0' ];
-		yield [ [ 'test' => new Parameterized([ 1, 2 ], new Parameters([ 'ok' => true, 'other' => 1 ])) ], 'test=(1 2);ok;other=1' ];
+		yield [ [ 'test' => new ReadOnlyParameterized(1, new Parameters([ 'param' => 1.0 ])), 'bool' => false ], 'test=1;param=1.0, bool=?0' ];
+		yield [ [ 'test' => new ReadOnlyParameterized([ 1, 2 ], new Parameters([ 'ok' => true, 'other' => 1 ])) ], 'test=(1 2);ok;other=1' ];
 	}
 
 	/** @param (ArrayAccess<mixed,mixed>&Countable&Traversable<mixed,mixed>)|array<mixed> $input */
@@ -56,9 +56,9 @@ class Rfc9651SerializerTest extends TestCase {
 	public static function validListCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 1 ], '1' ];
 		yield [ [ 1, 2 ], '1, 2' ];
-		yield [ [ new Parameterized(1, new Parameters([ 'test' => 1 ])), 2 ], '1;test=1, 2' ];
+		yield [ [ new ReadOnlyParameterized(1, new Parameters([ 'test' => 1 ])), 2 ], '1;test=1, 2' ];
 		yield [ [ 1, 2, [ 3, 4 ] ], '1, 2, (3 4)' ];
-		yield [ [ 1, new Parameterized([ 2, 3 ], new Parameters([ 'param' => Item::Token('ok') ])) ], '1, (2 3);param=ok' ];
+		yield [ [ 1, new ReadOnlyParameterized([ 2, 3 ], new Parameters([ 'param' => Item::Token('ok') ])) ], '1, (2 3);param=ok' ];
 	}
 
 	/** @param (Countable&Traversable<mixed>)|array<mixed> $input */
@@ -125,9 +125,9 @@ class Rfc9651SerializerTest extends TestCase {
 		yield [ Item::Date(new DateTime('@0')), '@0' ];
 		yield [ Item::DisplayString(''), '%""' ];
 		yield [ Item::DisplayString('Ûnicode! 😀'), '%"%c3%9bnicode! %f0%9f%98%80"' ];
-		yield [ new Parameterized(1, new Parameters([ 'answer' => 67 ])), '1;answer=67' ];
-		yield [ new Parameterized(1.0, new Parameters([ 'answer' => true ])), '1.0;answer' ];
-		yield [ new Parameterized(true, new Parameters([ 'answer' => false ])), '?1;answer=?0' ];
+		yield [ new ReadOnlyParameterized(1, new Parameters([ 'answer' => 67 ])), '1;answer=67' ];
+		yield [ new ReadOnlyParameterized(1.0, new Parameters([ 'answer' => true ])), '1.0;answer' ];
+		yield [ new ReadOnlyParameterized(true, new Parameters([ 'answer' => false ])), '?1;answer=?0' ];
 	}
 
 	#[DataProvider('validItemCases')]
@@ -140,6 +140,7 @@ class Rfc9651SerializerTest extends TestCase {
 	}
 
 	public static function invalidItemCases(): iterable { // @phpstan-ignore missingType.iterableValue
+		yield [ null ];
 		yield [ '' ];
 		yield [ 'any-string-is-ambiguous-and-therefore-disallowed' ];
 		yield [ -9999999999999999 ];
@@ -157,9 +158,9 @@ class Rfc9651SerializerTest extends TestCase {
 		yield [ Item::Token('invalid"') ];
 		yield [ Item::DisplayString("\xf0\x28\x8c\xbc") ]; // invalid unicode, should fail at second octet
 		yield [ Item::DisplayString("\xf8\xa1\xa1\xa1\xa1") ]; // valid sequence but not unicode
-		yield [ new Parameterized(1, new Parameters([ '1invalid' => 25 ])) ];
-		yield [ new Parameterized(true, new Parameters([ '' => 'hi' ])) ];
-		yield [ new Parameterized(1.0, new Parameters([ 'invalid!' => 'ok' ])) ];
+		yield [ new ReadOnlyParameterized(1, new Parameters([ '1invalid' => 25 ])) ];
+		yield [ new ReadOnlyParameterized(true, new Parameters([ '' => 'hi' ])) ];
+		yield [ new ReadOnlyParameterized(1.0, new Parameters([ 'invalid!' => 'ok' ])) ];
 	}
 
 	#[DataProvider('invalidItemCases')]

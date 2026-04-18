@@ -5,16 +5,17 @@ namespace Slendium\Http\Base\Field\Parsers;
 use Countable;
 use Traversable;
 
-use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
 use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\StringConsumer;
 use Slendium\Http\Base\Field\InnerList;
 use Slendium\Http\Base\Field\List_;
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
+use Slendium\Http\Field\Item;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
+ * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.1
  * @author C. Fahner
  * @copyright Slendium 2025
  */
@@ -22,7 +23,7 @@ final class ListParser {
 
 	/**
 	 * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.1
-	 * @return Countable&Traversable<int,IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>>
+	 * @return Countable&Traversable<int,Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>>
 	 */
 	public static function parse9651(StringConsumer $inputString): Countable&Traversable {
 		// 1. Let members be an empty array.
@@ -54,9 +55,9 @@ final class ListParser {
 
 	/**
 	 * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.1.1
-	 * @return IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>
+	 * @return Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>
 	 */
-	public static function parseItemOrInnerList9651(StringConsumer $inputString): IParameterized {
+	public static function parseItemOrInnerList9651(StringConsumer $inputString): Parameterized {
 		// 1. If the first character of input_string is "(", return the result of running Parsing an Inner List (Section 4.2.1.2) with input_string.
 		if ($inputString->peekEquals('(')) {
 			return self::parseInnerList($inputString); // @phpstan-ignore return.type (PHPStan is technically correct, but in practice this makes no difference)
@@ -68,9 +69,9 @@ final class ListParser {
 
 	/**
 	 * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.1.2
-	 * @return IParameterized<Countable&Traversable<int,IParameterized<Item>>>
+	 * @return Parameterized<Countable&Traversable<int,Parameterized<Item>>>
 	 */
-	private static function parseInnerList(StringConsumer $inputString): IParameterized {
+	private static function parseInnerList(StringConsumer $inputString): Parameterized {
 		// 1. Consume the first character of input_string; if it is not "(", fail parsing.
 		$inputString->expect([ '(' ], 'Expected inner list to start with "(" (RFC 9651, 4.2.1.2, 1');
 		$inputString->discard(1);
@@ -89,7 +90,7 @@ final class ListParser {
 				// 3.2.2. Let parameters be the result of running Parsing Parameters (Section 4.2.3.2) with input_string.
 				$parameters = ParametersParser::parse9651($inputString);
 				// 3.2.3. Return the tuple (inner_list, parameters).
-				return new Parameterized(self::newInnerList($innerList), $parameters);
+				return new ReadOnlyParameterized(self::newInnerList($innerList), $parameters);
 			}
 			// 3.3. Let item be the result of running Parsing an Item (Section 4.2.3) with input_string.
 			// 3.4. Append item to inner_list.
@@ -103,8 +104,8 @@ final class ListParser {
 	}
 
 	/**
-	 * @param iterable<IParameterized<Item>> $members
-	 * @return Countable&Traversable<int,IParameterized<Item>>
+	 * @param iterable<Parameterized<Item>> $members
+	 * @return Countable&Traversable<int,Parameterized<Item>>
 	 */
 	private static function newInnerList(iterable $members): Countable&Traversable {
 		return new InnerList($members);

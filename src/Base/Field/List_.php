@@ -9,20 +9,20 @@ use SplFixedArray;
 use Traversable;
 
 use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
- * @implements IteratorAggregate<int,IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>>
+ * @implements IteratorAggregate<int,Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>>
  * @author C. Fahner
  * @copyright Slendium 2025
  */
 class List_ implements Countable, IteratorAggregate {
 
-	/** @var SplFixedArray<IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>> */
+	/** @var SplFixedArray<Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>> */
 	private readonly SplFixedArray $items;
 
-	/** @param iterable<IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>> $items */
+	/** @param iterable<Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>> $items */
 	public function __construct(iterable $items) {
 		$this->items = SplFixedArray::fromArray(\array_values(\is_array($items)
 			? $items

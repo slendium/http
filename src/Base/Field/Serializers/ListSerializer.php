@@ -2,10 +2,10 @@
 
 namespace Slendium\Http\Base\Field\Serializers;
 
-use Slendium\Http\Base\Field\Parameterized;
 use Slendium\Http\Base\Field\Parameters;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
 use Slendium\Http\Base\SerializeException;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
@@ -24,8 +24,8 @@ final class ListSerializer {
 
 		// 2. For each (member_value, parameters) of input_list:
 		foreach ($input as $member) {
-			if (!($member instanceof IParameterized)) {
-				$member = new Parameterized($member, new Parameters([ ]));
+			if (!($member instanceof Parameterized)) {
+				$member = ReadOnlyParameterized::withoutParameters($member);
 			}
 			// 2.1. If member_value is an array, append the result of running Serializing an Inner List
 			//      (Section 4.1.1.1) with (member_value, parameters) to output.
@@ -47,10 +47,10 @@ final class ListSerializer {
 		return \implode(', ', $output);
 	}
 
-	/** @param IParameterized<iterable<mixed>>|iterable<mixed> $input */
-	public static function serializeInnerList9651(IParameterized|iterable $input): SerializeException|string {
+	/** @param Parameterized<iterable<mixed>>|iterable<mixed> $input */
+	public static function serializeInnerList9651(Parameterized|iterable $input): SerializeException|string {
 		if (\is_iterable($input)) {
-			$input = Parameterized::withoutParameters($input);
+			$input = ReadOnlyParameterized::withoutParameters($input);
 		}
 		// The rule in Section 4.1 point 1 about empty lists does not mention inner lists, so we ignore the empty case
 		// - we build a list<string> again and implode() and wrap it in "(" and ")" later
@@ -58,8 +58,8 @@ final class ListSerializer {
 
 		// 2. For each (member_value, parameters) of inner_list:
 		foreach ($input->data as $member) {
-			if (!($member instanceof IParameterized)) {
-				$member = new Parameterized($member, new Parameters([ ]));
+			if (!($member instanceof Parameterized)) {
+				$member = ReadOnlyParameterized::withoutParameters($member);
 			}
 			// 2.1. Append the result of running Serializing an Item (Section 4.1.3) with (member_value, parameters) to output.
 			$serialized = ItemSerializer::serialize9651($member);

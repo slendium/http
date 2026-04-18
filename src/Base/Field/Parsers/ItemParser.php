@@ -2,11 +2,11 @@
 
 namespace Slendium\Http\Base\Field\Parsers;
 
-use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
 use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\StringConsumer;
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
+use Slendium\Http\Field\Item;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
@@ -17,9 +17,9 @@ final class ItemParser {
 
 	/**
 	 * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.3
-	 * @return IParameterized<Item>
+	 * @return Parameterized<Item>
 	 */
-	public static function parse9651(StringConsumer $inputString): IParameterized {
+	public static function parse9651(StringConsumer $inputString): Parameterized {
 		// 1. Let bare_item be the result of running Parsing a Bare Item (Section 4.2.3.1) with input_string.
 		$bareItem = self::parseBareItem9651($inputString);
 
@@ -27,7 +27,7 @@ final class ItemParser {
 		$parameters = ParametersParser::parse9651($inputString);
 
 		// 3. Return the tuple (bare_item, parameters).
-		return new Parameterized($bareItem, $parameters);
+		return new ReadOnlyParameterized($bareItem, $parameters);
 	}
 
 	/** @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.3.1 */

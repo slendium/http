@@ -10,9 +10,9 @@ use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\StringConsumer;
 use Slendium\Http\Base\Field\Dictionary;
 use Slendium\Http\Base\Field\InnerList;
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
 use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
@@ -23,7 +23,7 @@ final class DictionaryParser {
 
 	/**
 	 * @see https://www.rfc-editor.org/rfc/rfc9651.html#section-4.2.2
-	 * @return (ArrayAccess<non-empty-string&lowercase-string,?IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>>)&Countable&Traversable<non-empty-string&lowercase-string,IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>>
+	 * @return (ArrayAccess<non-empty-string&lowercase-string,?Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>>)&Countable&Traversable<non-empty-string&lowercase-string,Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>>
 	 */
 	public static function parse9651(StringConsumer $inputString): ArrayAccess&Countable&Traversable {
 		// 1. Let dictionary be an empty, ordered map.
@@ -47,7 +47,7 @@ final class DictionaryParser {
 				// 2.3.2. Let parameters be the result of running Parsing Parameters (Section 4.2.3.2) with input_string.
 				$parameters = ParametersParser::parse9651($inputString);
 				// 2.3.3. Let member be the tuple (value, parameters).
-				$member = Parameterized::newInterface($value, $parameters);
+				$member = ReadOnlyParameterized::newInterface($value, $parameters);
 			}
 			// 2.4. If dictionary already contains a key this_key (comparing character for character), overwrite its value with member.
 			// 2.5. Otherwise, append key this_key with value member to dictionary.
@@ -75,7 +75,7 @@ final class DictionaryParser {
 		return self::newDictionary($dictionary);
 	}
 
-	/** @param array<lowercase-string&non-empty-string,IParameterized<(Countable&Traversable<int,IParameterized<Item>>)|Item>|IParameterized<Item>> $dictionary */
+	/** @param array<lowercase-string&non-empty-string,Parameterized<(Countable&Traversable<int,Parameterized<Item>>)|Item>|Parameterized<Item>> $dictionary */
 	private static function newDictionary(array $dictionary): Dictionary {
 		return new Dictionary($dictionary); // @phpstan-ignore argument.type (this function converts Wrapper<A>|Wrapper<B> to Wrapper<A|B> for static analysis)
 	}

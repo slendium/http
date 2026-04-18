@@ -6,12 +6,14 @@ use DateTimeInterface;
 use BcMath\Number;
 
 use Slendium\Http\Base\SerializeException;
-use Slendium\Http\Base\Field\Parameterized;
+use Slendium\Http\Base\Field\ReadOnlyParameterized;
 use Slendium\Http\Field\Item;
-use Slendium\Http\Field\Parameterized as IParameterized;
+use Slendium\Http\Field\Parameterized;
 
 /**
  * @internal
+ * @see https://datatracker.ietf.org/doc/html/rfc9651#section-4.1.3
+ * @see https://datatracker.ietf.org/doc/html/rfc9651#section-4.1.3.1
  * @author C. Fahner
  * @copyright Slendium 2026
  */
@@ -19,8 +21,8 @@ final class ItemSerializer {
 
 	/** @see https://datatracker.ietf.org/doc/html/rfc9651#section-4.1.3 */
 	public static function serialize9651(mixed $input): SerializeException|string {
-		if (!($input instanceof IParameterized)) {
-			$input = Parameterized::withoutParameters($input);
+		if (!($input instanceof Parameterized)) {
+			$input = ReadOnlyParameterized::withoutParameters($input);
 		}
 
 		// 1. Let output be an empty string.
