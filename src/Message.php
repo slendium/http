@@ -40,9 +40,9 @@ interface Message {
 	 * files should also be included in this structure in the same way.
 	 *
 	 * @since 1.0
-	 * @var (Stringable&Traversable<Stringable|string>)|null
+	 * @var ?iterable<Stringable|string>
 	 */
-	public (Stringable&Traversable)|null $body { get; }
+	public ?iterable $body { get; }
 
 	/**
 	 * The message trailer fields.
