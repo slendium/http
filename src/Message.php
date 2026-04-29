@@ -2,10 +2,7 @@
 
 namespace Slendium\Http;
 
-use ArrayAccess;
-use Countable;
 use Stringable;
-use Traversable;
 
 /**
  * A generic HTTP message.
@@ -18,14 +15,16 @@ interface Message {
 	/**
 	 * The message header fields.
 	 *
-	 * Mutable implementations MUST implement `ArrayAccess::offsetSet()` as follows:
-	 * * If `$offset` is `NULL`, `$value` MUST be a `Field` to be appended to the list
-	 * * If `$offset` is a `string` and `$value` is `NULL`, all headers by that name MUST be removed
+	 * Implementations may provide an `ArrayAccess|array` value that maps field names to an iterable
+	 * of all fields with that name for improved lookup performance.
+	 *
+	 * See {@see Message\Fields} to extract information from this property and {@see \Slendium\Http\Base\FieldSet}
+	 * for a default implementation.
 	 *
 	 * @since 1.0
-	 * @var ArrayAccess<?(non-empty-string&lowercase-string),?Field>&Countable&Traversable<Field>
+	 * @var iterable<Field>
 	 */
-	public ArrayAccess&Countable&Traversable $headers { get; }
+	public iterable $headers { get; }
 
 	/**
 	 * The message body as a stream of parts, if any.
@@ -47,13 +46,15 @@ interface Message {
 	/**
 	 * The message trailer fields.
 	 *
-	 * Mutable implementations MUST implement `ArrayAccess::offsetSet()` as follows:
-	 * * If `$offset` is `NULL`, `$value` MUST be a `Field` to be appended to the list
-	 * * If `$offset` is a `string` and `$value` is `NULL`, all headers by that name MUST be removed
+	 * Implementations may provide an `ArrayAccess|array` value that maps field names to an iterable
+	 * of all fields with that name for improved lookup performance.
+	 *
+	 * See {@see Message\Fields} to extract information from this property and {@see \Slendium\Http\Base\FieldSet}
+	 * for a default implementation.
 	 *
 	 * @since 1.0
-	 * @var ArrayAccess<?(non-empty-string&lowercase-string),?Field>&Countable&Traversable<Field>
+	 * @var iterable<Field>
 	 */
-	public ArrayAccess&Countable&Traversable $trailers { get; }
+	public iterable $trailers { get; }
 
 }
