@@ -2,6 +2,7 @@
 
 namespace Slendium\Http\Network;
 
+use Exception;
 use Override;
 
 use Slendium\Http\Base\ParseException;
@@ -16,7 +17,7 @@ use Slendium\Http\Base\SerializeException;
  * @since 1.0
  * @phpstan-import-type Ipv6Words from IpAddress
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
 final class Ipv6Address extends IpAddress {
 
@@ -29,22 +30,27 @@ final class Ipv6Address extends IpAddress {
 	public readonly array $words; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]
-	public static function fromString(string $input): self {
+	public static function fromString(string $input): Exception|self {
 		if (\strpos($input, '.') !== false) {
 			return self::fromIpv4Mapping($input);
 		}
 		$binary = \inet_pton($input);
 		if ($binary === false || \strlen($binary) !== 16) {
-			throw new ParseException('IPv6 address could not be parsed');
+			return new ParseException('IPv6 address could not be parsed');
 		}
 		return IpAddress::V6(\array_values(\unpack('n*', $binary))); // @phpstan-ignore argument.type, argument.type (PHPStan does not know unpack)
 	}
 
-	private static function fromIpv4Mapping(string $input): self {
+	private static function fromIpv4Mapping(string $input): Exception|self {
 		if (!\str_starts_with($input, self::IPV4_MAP_PREFIX)) {
-			throw new ParseException('IPv6-IPv4 mapping address must start with "::ffff:" followed by four octets');
+			return new ParseException('IPv6-IPv4 mapping address must start with "::ffff:" followed by four octets');
 		}
+
 		$ipv4 = Ipv4Address::fromString(\substr($input, \strlen(self::IPV4_MAP_PREFIX)));
+		if ($ipv4 instanceof Exception) {
+			return $ipv4;
+		}
+
 		return IpAddress::V6([ // @phpstan-ignore argument.type (phpstan turns array_pad into an unshaped array)
 			...\array_pad([ ], 5, 0),
 			0xffff,

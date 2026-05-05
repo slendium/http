@@ -2,6 +2,7 @@
 
 namespace Slendium\Http\Network;
 
+use Exception;
 use Override;
 
 use Slendium\Http\Base\ParseException;
@@ -10,7 +11,7 @@ use Slendium\Http\Base\ParseException;
  * @since 1.0
  * @phpstan-import-type Ipv4Octets from IpAddress
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
 final class Ipv4Address extends IpAddress {
 
@@ -21,10 +22,10 @@ final class Ipv4Address extends IpAddress {
 	public readonly array $octets; // @phpstan-ignore property.uninitializedReadonly
 
 	#[Override]
-	public static function fromString(string $input): self {
+	public static function fromString(string $input): Exception|self {
 		$binary = \inet_pton($input);
 		if ($binary === false || \strlen($binary) !== 4) {
-			throw new ParseException('IPv4 address could not be parsed');
+			return new ParseException('IPv4 address could not be parsed');
 		}
 		return IpAddress::V4(\array_values(\unpack('C*', $binary))); // @phpstan-ignore argument.type, argument.type (phpstan does not understand unpack)
 	}

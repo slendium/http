@@ -2,8 +2,8 @@
 
 namespace Slendium\Http\Network;
 
+use Exception;
 use Stringable;
-use Throwable;
 
 /**
  * @since 1.0
@@ -12,7 +12,7 @@ use Throwable;
  * @phpstan-type Ipv4Octets array{0:octet,1:octet,2:octet,3:octet}
  * @phpstan-type Ipv6Words array{0:word,1:word,2:word,3:word,4:word,5:word,6:word,7:word}
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
 abstract class IpAddress implements Stringable {
 
@@ -32,11 +32,8 @@ abstract class IpAddress implements Stringable {
 		return new Ipv6Address($words);
 	}
 
-	/**
-	 * @since 1.0
-	 * @throws Throwable When the given string was not a valid IP address
-	 */
-	public static function fromString(string $input): self {
+	/** @since 1.0 */
+	public static function fromString(string $input): Ipv4Address|Ipv6Address|Exception {
 		return \strpos($input, ':') === false
 			? Ipv4Address::fromString($input)
 			: Ipv6Address::fromString($input);

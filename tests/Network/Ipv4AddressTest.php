@@ -11,9 +11,14 @@ use Slendium\Http\Network\{
 };
 use Slendium\Http\Base\ParseException;
 
+/**
+ * @internal
+ * @author C. Fahner
+ * @copyright Slendium 2025-2026
+ */
 class Ipv4AddressTest extends TestCase {
 
-	public static function octetsAndStrings(): iterable {
+	public static function octetsAndStrings(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 0, 0, 0 ], '0.0.0.0' ];
 		yield [ [ 127, 0, 0, 1 ], '127.0.0.1' ];
 		yield [ [ 255, 255, 255, 255 ], '255.255.255.255' ];
@@ -21,26 +26,21 @@ class Ipv4AddressTest extends TestCase {
 
 	#[DataProvider('octetsAndStrings')]
 	public function test___toString_shouldMatchStringRepresentation_whenInvoked(array $octets, string $representation): void {
-		// Arrange
 		$sut = IpAddress::V4($octets);
 
-		// Act
 		$result = (string)$sut;
 
-		// Assert
 		$this->assertSame($representation, $result);
 	}
 
 	#[DataProvider('octetsAndStrings')]
-	public function test_fromString_shouldReturn_whenInvokedWithValidString(array $octets, string $input) {
-		// Act
+	public function test_fromString_shouldReturn_whenInvokedWithValidString(array $octets, string $input): void {
 		$result = Ipv4Address::fromString($input);
 
-		// Assert
 		$this->assertSame($octets, $result->octets);
 	}
 
-	public static function invalidStrings(): iterable {
+	public static function invalidStrings(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ '' ];
 		yield [ '1.1' ];
 		yield [ '-1.-1.-1.-1' ];
@@ -50,12 +50,10 @@ class Ipv4AddressTest extends TestCase {
 	}
 
 	#[DataProvider('invalidStrings')]
-	public function test_fromString_shouldThrow_whenInvokedWithInvalidString(string $input) {
-		// Assert
-		$this->expectException(ParseException::class);
+	public function test_fromString_shouldReturnException_whenInvokedWithInvalidString(string $input): void {
+		$result = Ipv4Address::fromString($input);
 
-		// Act
-		Ipv4Address::fromString($input);
+		$this->assertInstanceOf(ParseException::class, $result);
 	}
 
 }

@@ -5,15 +5,18 @@ namespace Slendium\HttpTests;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-use Slendium\Http\Network\{
-	IpAddress,
-	Ipv6Address,
-};
 use Slendium\Http\Base\ParseException;
+use Slendium\Http\Network\IpAddress;
+use Slendium\Http\Network\Ipv6Address;
 
+/**
+ * @since 1.0
+ * @author C. Fahner
+ * @copyright Slendium 2025-2026
+ */
 class Ipv6AddressTest extends TestCase {
 
-	public static function validIpv6Inputs(): iterable {
+	public static function validIpv6Inputs(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], '::' ];
 		yield [ [ 0, 0, 0, 0, 0, 0, 0, 1 ], '::1' ];
 		yield [ [ 0, 0, 0, 0, 0, 0xffff, 0xc0a8, 0x0101 ], '::ffff:192.168.1.1' ];
@@ -24,15 +27,13 @@ class Ipv6AddressTest extends TestCase {
 	}
 
 	#[DataProvider('validIpv6Inputs')]
-	public function test_fromString_shouldReturn_whenInputValid(array $expectedWords, string $representation) {
-		// Act
+	public function test_fromString_shouldReturn_whenInputValid(array $expectedWords, string $representation): void {
 		$result = Ipv6Address::fromString($representation)->words;
 
-		// Assert
 		$this->assertSame($expectedWords, $result);
 	}
 
-	public static function invalidIpv6Inputs(): iterable {
+	public static function invalidIpv6Inputs(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ '' ];
 		yield [ '2501::fe40::f3a2' ]; // more than one "::" shortener is not allowed
 		yield [ '0425:2ca1:0000:0000:0560:5673:23b5' ]; // 7 octets
@@ -43,15 +44,13 @@ class Ipv6AddressTest extends TestCase {
 	}
 
 	#[DataProvider('invalidIpv6Inputs')]
-	public function test_fromString_shouldThrow_whenInputInvalid(string $input) {
-		// Assert
-		$this->expectException(ParseException::class);
+	public function test_fromString_shouldReturnException_whenInputInvalid(string $input): void {
+		$result = Ipv6Address::fromString($input);
 
-		// Act
-		Ipv6Address::fromString($input);
+		$this->assertInstanceOf(ParseException::class, $result);
 	}
 
-	public static function canonicalIpv6(): iterable {
+	public static function canonicalIpv6Cases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ [ 0, 0, 0, 0, 0, 0, 0, 0 ], '::' ];
 		yield [ [ 0, 0, 0, 0, 0, 0, 0, 0xfe80 ], '::fe80' ];
 		yield [ [ 0xfe80, 0, 0, 0, 0, 0, 0, 0 ], 'fe80::' ];
@@ -59,15 +58,12 @@ class Ipv6AddressTest extends TestCase {
 		yield [ [ 0x2340, 0x0425, 0x2ca1, 0x1, 0x1, 0x0560, 0x5673, 0x23b5 ], '2340:425:2ca1:1:1:560:5673:23b5' ];
 	}
 
-	#[DataProvider('canonicalIpv6')]
-	public function test___toString_shouldReturnCanonicalForm_whenInputValid(array $octets, string $expectedCanonicalForm) {
-		// Arrange
+	#[DataProvider('canonicalIpv6Cases')]
+	public function test___toString_shouldReturnCanonicalForm_whenInputValid(array $octets, string $expectedCanonicalForm): void {
 		$sut = IpAddress::V6($octets);
 
-		// Act
 		$result = (string)$sut;
 
-		// Assert
 		$this->assertSame($expectedCanonicalForm, $result);
 	}
 
