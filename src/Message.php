@@ -39,9 +39,9 @@ interface Message {
 	 * files should also be included in this structure in the same way.
 	 *
 	 * @since 1.0
-	 * @var ?iterable<Stringable|string>
+	 * @var iterable<Stringable|string>
 	 */
-	public ?iterable $body { get; }
+	public iterable $body { get; }
 
 	/**
 	 * The message trailer fields.
