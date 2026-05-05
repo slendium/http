@@ -5,8 +5,8 @@ namespace Slendium\HttpTests\Message;
 use PHPUnit\Framework\TestCase;
 
 use Slendium\Http\Base\FieldSet;
-use Slendium\Http\Base\Field as ReadOnlyField;
 use Slendium\Http\Message\Fields;
+use Slendium\Http\ReadOnlyField;
 
 /**
  * @internal

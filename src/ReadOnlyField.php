@@ -1,28 +1,27 @@
 <?php
 
-namespace Slendium\Http\Base;
+namespace Slendium\Http;
 
 use Override;
 
-use Slendium\Http\Field as IField;
+use Slendium\Http\Field;
 
 /**
- * A basic field implementation.
  * @since 1.0
  * @author C. Fahner
  * @copyright Slendium 2025
  */
-class Field implements IField {
+readonly class ReadOnlyField implements Field {
 
 	/** @since 1.0 */
 	public function __construct(
 
 		/** @var lowercase-string&non-empty-string */
 		#[Override]
-		public readonly string $name,
+		public string $name,
 
 		#[Override]
-		public readonly string $value,
+		public string $value,
 
 	) { }
 

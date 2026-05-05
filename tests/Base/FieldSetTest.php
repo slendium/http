@@ -8,8 +8,8 @@ use OutOfBoundsException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use Slendium\Http\Base\Field as ReadOnlyField;
 use Slendium\Http\Base\FieldSet;
+use Slendium\Http\ReadOnlyField;
 
 /**
  * @internal
