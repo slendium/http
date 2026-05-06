@@ -27,12 +27,10 @@ $request = $networked->payload; // the request message with headers, body and tr
 $address = $networked->address; // contain IP and port, can be passed around independently
 
 // implementation-agnostic access to POST-ed data ($_POST, form data, JSON, CBOR, mocked data)
-if ($request->body instanceof Structured) {
-	$post = $request->body->root; // ArrayAccess&Countable&Traversable
-}
+$post = BodyArgs::getAll($request); // ArrayAccess&Countable&Traversable
 
 // access query arguments
-$queryData = $request->uri->getQuery(); // (ArrayAccess&Countable&Traversable)|null
+$get = QueryArgs::getAll($request); // ArrayAccess&Countable&Traversable
 ```
 
 Cookies can also be accessed in an implementation-agnostic way. It doesn't matter where the cookies
@@ -53,15 +51,16 @@ if ($cookieHeader instanceof Structured) {
 
 ### Uploaded files
 
+Files are transferred through the message body and are therefore treated as body arguments.
+
 ```php
-if ($request->body instanceof Structured) {
-	// files are merged with body data
-	$upload = $request->body->root['file'];
-	if ($upload instanceof UploadedFile) {
-		// process file
-	} else if ($upload instanceof UploadFailure) {
-		// handle error
-	}
+$upload = BodyArgs::get($request, 'file');
+if ($upload instanceof UploadedFile) {
+	// process file
+} else if ($upload instanceof UploadFailure) {
+	// handle error
+} else {
+	// handle not present
 }
 ```
 
