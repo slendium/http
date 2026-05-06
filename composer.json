@@ -1,6 +1,6 @@
 {
 	"name": "slendium/http",
-	"description": "A framework-agnostic library for interoperable HTTP messaging.",
+	"description": "Framework-agnostic library containing HTTP abstractions.",
 	"type": "library",
 	"license": "MIT",
 	"require": {
