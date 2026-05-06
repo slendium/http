@@ -1,34 +1,45 @@
 <?php
 
-namespace Slendium\Http\Base\Content;
+namespace Slendium\Http\Content;
 
 use Slendium\Http\Base\HttpChar;
 use Slendium\Http\Base\ParseException;
 use Slendium\Http\Base\StringConsumer;
+use Slendium\Http\Content\MediaType;
+use Slendium\Http\Content\MediaTypeName;
 
 /**
  * @internal
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
 class MediaTypeParser {
 
 	/** @see https://www.rfc-editor.org/rfc/rfc6838#section-4.2 */
-	public static function parseString(string $inputString): MediaType {
+	public static function parseString(string $inputString): ParseException|MediaType {
 		$inputString = new StringConsumer(\trim($inputString));
 		$major = self::parseName($inputString);
-		if ($inputString->peek(1) !== '/') {
-			throw new ParseException('Main type and subtype of media type must be separated by a "/" (RFC 6838 4.2)');
+		if ($major instanceof ParseException) {
+			return $major;
 		}
+
+		if ($inputString->peek(1) !== '/') {
+			return new ParseException('Main type and subtype of media type must be separated by a "/" (RFC 6838 4.2)');
+		}
+
 		$inputString->discard(1);
 		$minor = self::parseName($inputString);
-		return new MediaType($major, $minor);
+		if ($minor instanceof ParseException) {
+			return $minor;
+		}
+
+		return new ReadOnlyMediaType($major, $minor);
 	}
 
-	private static function parseName(StringConsumer $inputString): MediaTypeName {
+	private static function parseName(StringConsumer $inputString): ParseException|MediaTypeName {
 		$firstChar = $inputString->peek(1);
 		if ($firstChar === '' || !HttpChar::isAlpha($firstChar) && !HttpChar::isDigit($firstChar)) {
-			throw new ParseException('First character of a media type name must be ALPHA or DIGIT (RFC 6838, 4.2)');
+			return new ParseException('First character of a media type name must be ALPHA or DIGIT (RFC 6838, 4.2)');
 		}
 
 		$validated = $inputString->consume(1);
@@ -46,7 +57,7 @@ class MediaTypeParser {
 				&& $char !== '.'
 				&& $char !== '+'
 			) {
-				throw new ParseException('Characters in a media type name must be ALPHA or DIGIT or "!#$&-^_.+" (RFC 6838, 4.2)');
+				return new ParseException('Characters in a media type name must be ALPHA or DIGIT or "!#$&-^_.+" (RFC 6838, 4.2)');
 			}
 			$validated .= $char;
 		}
@@ -55,7 +66,7 @@ class MediaTypeParser {
 		$facetEnd = \strpos($validated, '.');
 		$syntaxStart = \strrpos($validated, '+');
 		if ($facetEnd !== false && $syntaxStart !== false && $facetEnd > $syntaxStart) {
-			throw new ParseException('Ambiguous situation, facet and syntax suffix overlap (not clarified by RFC 6838)');
+			return new ParseException('Ambiguous situation, facet and syntax suffix overlap (not clarified by RFC 6838)');
 		}
 
 		$name = \substr(
@@ -64,16 +75,16 @@ class MediaTypeParser {
 			length: $syntaxStart !== false ? $syntaxStart - \strlen($validated) : null
 		);
 		if ($name === '') {
-			throw new ParseException('Media type name is empty or only consists of a facet and syntax suffix');
+			return new ParseException('Media type name is empty or only consists of a facet and syntax suffix');
 		}
 
 		$facet = $facetEnd !== false ? \substr($validated, 0, $facetEnd) : null;
 		$syntax = $syntaxStart !== false ? \substr($validated, $syntaxStart + 1) : null;
 		if ($syntax === '') {
-			throw new ParseException('Structured syntax suffix was empty');
+			return new ParseException('Structured syntax suffix was empty');
 		}
 
-		return new MediaTypeName(
+		return new ReadOnlyMediaTypeName(
 			name: $name,
 			facet: $facet, // @phpstan-ignore argument.type (facet cannot be empty string since first char must always be alpha or digit)
 			syntax: $syntax,

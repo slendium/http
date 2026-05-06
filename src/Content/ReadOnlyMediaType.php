@@ -1,18 +1,19 @@
 <?php
 
-namespace Slendium\Http\Base\Content;
+namespace Slendium\Http\Content;
 
+use Exception;
 use Override;
 
-use Slendium\Http\Content\MediaType as IMediaType;
-use Slendium\Http\Base\ParseException;
+use Slendium\Http\Content\MediaType;
+use Slendium\Http\Content\MediaTypeName;
 
 /**
  * @since 1.0
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
-class MediaType implements IMediaType {
+class ReadOnlyMediaType implements MediaType {
 
 	/**
 	 * Converts a string into a media type.
@@ -23,9 +24,8 @@ class MediaType implements IMediaType {
 	 * would be "a+b" and the syntax suffix would be "b.c". An exception is thrown in this case.
 	 *
 	 * @since 1.0
-	 * @throws ParseException When parsing failed
 	 */
-	public static function fromString(string $input): self {
+	public static function fromString(string $input): Exception|MediaType {
 		return MediaTypeParser::parseString($input);
 	}
 
@@ -35,7 +35,7 @@ class MediaType implements IMediaType {
 	 * @param lowercase-string&non-empty-string $subtype
 	 */
 	public static function fromNames(string $main, string $subtype): self {
-		return new self(new MediaTypeName($main), new MediaTypeName($subtype));
+		return new self(new ReadOnlyMediaTypeName($main), new ReadOnlyMediaTypeName($subtype));
 	}
 
 	/** @since 1.0 */
@@ -49,6 +49,7 @@ class MediaType implements IMediaType {
 
 	) { }
 
+	/** @return non-empty-string */
 	public function __toString(): string {
 		return "{$this->major}/{$this->minor}";
 	}

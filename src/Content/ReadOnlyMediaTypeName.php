@@ -1,17 +1,17 @@
 <?php
 
-namespace Slendium\Http\Base\Content;
+namespace Slendium\Http\Content;
 
 use Override;
 
-use Slendium\Http\Content\MediaTypeName as IMediaTypeName;
+use Slendium\Http\Content\MediaTypeName;
 
 /**
  * @since 1.0
  * @author C. Fahner
- * @copyright Slendium 2025
+ * @copyright Slendium 2025-2026
  */
-class MediaTypeName implements IMediaTypeName {
+class ReadOnlyMediaTypeName implements MediaTypeName {
 
 	/** @since 1.0 */
 	public function __construct(

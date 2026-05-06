@@ -6,15 +6,18 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 use Slendium\Http\Base\ParseException;
-use Slendium\Http\Base\Content\MediaType;
+use Slendium\Http\Content\ReadOnlyMediaType;
 
+/**
+ * @internal
+ * @author C. Fahner
+ * @copyright Slendium 2026
+ */
 class MediaTypeTest extends TestCase {
 
-	public function test_fromString_shouldRecognizeFacetAndSyntax() {
-		// Act
-		$sut = MediaType::fromString('image/x.svg+xml');
+	public function test_fromString_shouldRecognizeFacetAndSyntax(): void {
+		$sut = ReadOnlyMediaType::fromString('image/x.svg+xml');
 
-		// Assert
 		$this->assertSame('image', $sut->major->name);
 		$this->assertNull($sut->major->facet);
 		$this->assertNull($sut->major->syntax);
@@ -23,16 +26,14 @@ class MediaTypeTest extends TestCase {
 		$this->assertSame('xml', $sut->minor->syntax);
 	}
 
-	public function test_fromString_shouldRecognizePlainTypes() {
-		// Act
-		$sut = MediaType::fromString('application/json');
+	public function test_fromString_shouldRecognizePlainTypes(): void {
+		$sut = ReadOnlyMediaType::fromString('application/json');
 
-		// Assert
 		$this->assertSame('application', $sut->major->name);
 		$this->assertSame('json', $sut->minor->name);
 	}
 
-	public static function invalidCases(): iterable {
+	public static function invalidCases(): iterable { // @phpstan-ignore missingType.iterableValue
 		yield [ '' ];
 		yield [ 'image' ];
 		yield [ 'image/' ];
@@ -46,33 +47,25 @@ class MediaTypeTest extends TestCase {
 	}
 
 	#[DataProvider('invalidCases')]
-	public function test_fromString_shouldThrow_whenInputInvalid(string $input) {
-		// Assert
-		$this->expectException(ParseException::class);
+	public function test_fromString_shouldReturnException_whenInputInvalid(string $input): void {
+		$result = ReadOnlyMediaType::fromString($input);
 
-		// Act
-		MediaType::fromString($input);
+		$this->assertInstanceOf(ParseException::class, $result);
 	}
 
-	public function test___toString_shouldAddSlash() {
-		// Arrange
-		$sut = MediaType::fromNames('text', 'plain');
+	public function test___toString_shouldAddSlash(): void {
+		$sut = ReadOnlyMediaType::fromNames('text', 'plain');
 
-		// Act
 		$result = (string)$sut;
 
-		// Assert
 		$this->assertSame('text/plain', $result);
 	}
 
-	public function test___toString_shouldIncludeFacetAndSyntax() {
-		// Arrange
-		$sut = MediaType::fromString('image/x.svg+xml');
+	public function test___toString_shouldIncludeFacetAndSyntax(): void {
+		$sut = ReadOnlyMediaType::fromString('image/x.svg+xml');
 
-		// Act
 		$result = (string)$sut;
 
-		// Assert
 		$this->assertSame('image/x.svg+xml', $result);
 	}
 
