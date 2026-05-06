@@ -35,16 +35,19 @@ if ($request->body instanceof Structured) {
 $queryData = $request->uri->getQuery(); // (ArrayAccess&Countable&Traversable)|null
 ```
 
-Cookies can also be accessed in an implementation-agnostic way. It doesn't matter if the cookies
-come from a parsed header, the `$_COOKIES` superglobal or are mocked values.
+Cookies can also be accessed in an implementation-agnostic way. It doesn't matter where the cookies
+come from: a custom parsed header, the `$_COOKIES` superglobal or mocks/fakes.
 
 ```php
+// Get a single cookie value
+$value = Cookies::get($request, 'MyCookie'); // returns ?string
+
+// Access the raw cookie data
 $cookieHeader = Headers::getFirst($request, 'cookie');
-if ($cookieHeader !== null && $cookieHeader instanceof Structured) {
-	$cookies = $cookieHeader->root; // ArrayAccess&Countable&Traversable
-	$cookieValue = $cookies['cookieName'];
-	// or get the full header value instead
-	$cookieString = $cookieHeader->value;
+if ($cookieHeader instanceof Structured) {
+	foreach ($cookieHeader->root as $name => $value) {
+		// do something with each cookie
+	}
 }
 ```
 
